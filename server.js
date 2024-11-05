@@ -1,7 +1,8 @@
 const express = require('express');
 const path = require('path');
+const axios = require('axios'); // Importa axios si aún no lo tienes
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Usa el puerto proporcionado por Render o el 3000
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -50,5 +51,6 @@ app.post('/generar_examen', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor en funcionamiento en http://localhost:${PORT}`);
+    console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
 });
+
