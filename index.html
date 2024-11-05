@@ -1,0 +1,32 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Exámenes</title>
+</head>
+<body>
+    <h1>Generador de Exámenes</h1>
+    <form action="/generar_examen" method="POST">
+        <label for="curso">Curso Académico:</label>
+        <input type="text" id="curso" name="curso" required>
+
+        <label for="tema">Tema:</label>
+        <input type="text" id="tema" name="tema" required>
+
+        <label for="dificultad">Dificultad:</label>
+        <select id="dificultad" name="dificultad">
+            <option value="baja">Baja</option>
+            <option value="media">Media</option>
+            <option value="alta">Alta</option>
+        </select>
+
+        <label>Opciones Visuales:</label>
+        <input type="checkbox" name="visuales" value="tablas"> Tablas
+        <input type="checkbox" name="visuales" value="dibujos"> Dibujos
+        <input type="checkbox" name="visuales" value="diagramas"> Diagramas
+
+        <button type="submit">Generar Examen</button>
+    </form>
+</body>
+</html>
