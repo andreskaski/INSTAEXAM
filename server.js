@@ -1,42 +1,48 @@
 const express = require('express');
-const axios = require('axios');
+const path = require('path');
 const app = express();
 const PORT = 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Configura tu API Key de OpenAI
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+// Sirve archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
 
+// Ruta para la página de inicio (registro/login)
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.post('/generar_examen', async (req, res) => {
-    const { curso, tema, dificultad, visuales } = req.body;
+// Ruta para el dashboard (panel de control)
+app.post('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
 
-    // Prompt optimizado para generar 10 preguntas variadas y creativas
-    const prompt = `Crea un examen con 10 preguntas variadas y creativas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. Las preguntas deben incluir una combinación de opción múltiple, preguntas abiertas y ejercicios prácticos. Evita repetir preguntas y proporciona solo el texto de las preguntas. Si es posible, incluye ${Array.isArray(visuales) ? visuales.join(', ') : 'elementos visuales apropiados'}.`;
+// Ruta para generar el examen
+app.post('/generar_examen', async (req, res) => {
+    const { curso, tema, dificultad } = req.body;
+
+    const prompt = `Crea un examen con 10 preguntas variadas y creativas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. Las preguntas deben incluir una combinación de opción múltiple, preguntas abiertas y ejercicios prácticos. Evita repetir preguntas y proporciona solo el texto de las preguntas.`;
 
     try {
         const response = await axios.post(
             'https://api.openai.com/v1/chat/completions',
             {
-                model: 'gpt-4', // Puedes cambiar a 'gpt-3.5-turbo' si no tienes acceso a GPT-4
+                model: 'gpt-4', // Cambia a 'gpt-3.5-turbo' si estás usando esa versión
                 messages: [
                     { role: "user", content: prompt }
                 ],
-                max_tokens: 700, // Aumentado para permitir espacio suficiente para 10 preguntas
-                temperature: 0.7 // Mayor creatividad en las respuestas
+                max_tokens: 700,
+                temperature: 0.7
             },
             {
-                headers: { Authorization: `Bearer ${OPENAI_API_KEY}` },
+                headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
             }
         );
 
         const examenGenerado = response.data.choices[0].message.content.trim();
-        res.send(`<h1>Examen Generado</h1><pre>${examenGenerado}</pre><a href="/">Volver</a>`);
+        res.send(`<h1>Examen Generado</h1><pre>${examenGenerado}</pre><a href="/dashboard">Volver</a>`);
     } catch (error) {
         console.error('Error al generar el examen:', error.response ? error.response.data : error.message);
         res.status(500).send('Error al generar el examen');

@@ -1,32 +1,32 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Generador de Exámenes</title>
+    <title>Generador de Exámenes - Inicio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Generador de Exámenes</h1>
-    <form action="/generar_examen" method="POST">
-        <label for="curso">Curso Académico:</label>
-        <input type="text" id="curso" name="curso" required>
+    <form action="/dashboard" method="POST">
+        <label for="email">Correo Electrónico:</label>
+        <input type="email" id="email" name="email" required>
 
-        <label for="tema">Tema:</label>
-        <input type="text" id="tema" name="tema" required>
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" required>
 
-        <label for="dificultad">Dificultad:</label>
-        <select id="dificultad" name="dificultad">
-            <option value="baja">Baja</option>
-            <option value="media">Media</option>
-            <option value="alta">Alta</option>
-        </select>
+        <label for="school">Centro Educativo:</label>
+        <input type="text" id="school" name="school" required>
 
-        <label>Opciones Visuales:</label>
-        <input type="checkbox" name="visuales" value="tablas"> Tablas
-        <input type="checkbox" name="visuales" value="dibujos"> Dibujos
-        <input type="checkbox" name="visuales" value="diagramas"> Diagramas
+        <label for="stage">Etapa Escolar:</label>
+        <input type="text" id="stage" name="stage" required>
 
-        <button type="submit">Generar Examen</button>
+        <label for="country">País:</label>
+        <input type="text" id="country" name="country" required>
+
+        <label for="city">Ciudad:</label>
+        <input type="text" id="city" name="city" required>
+
+        <button type="submit">Entrar</button>
     </form>
 </body>
 </html>

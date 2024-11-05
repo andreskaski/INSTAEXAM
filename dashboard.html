@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de Exámenes - Panel</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <aside class="sidebar">
+        <h2>Menú</h2>
+        <ul>
+            <li><a href="#generador">Generador de Exámenes</a></li>
+            <li><a href="#perfil">Perfil</a></li>
+            <li><a href="#ayuda">Ayuda</a></li>
+            <li><a href="#logout" onclick="logout()">Cerrar sesión</a></li>
+        </ul>
+    </aside>
+
+    <div class="main-content">
+        <h1>Bienvenido a tu panel</h1>
+        <section id="generador">
+            <h2>Generar Examen</h2>
+            <form action="/generar_examen" method="POST">
+                <label for="curso">Curso Académico:</label>
+                <input type="text" id="curso" name="curso" required>
+
+                <label for="tema">Tema:</label>
+                <input type="text" id="tema" name="tema" required>
+
+                <label for="dificultad">Dificultad:</label>
+                <select id="dificultad" name="dificultad">
+                    <option value="baja">Baja</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                </select>
+
+                <button type="submit">Generar Examen</button>
+            </form>
+        </section>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
