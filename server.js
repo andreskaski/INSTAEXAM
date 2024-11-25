@@ -18,10 +18,7 @@ app.get('/', (req, res) => {
 
 // Ruta para manejar el formulario de inicio y redirigir al dashboard
 app.post('/dashboard', (req, res) => {
-    // Aquí puedes procesar los datos enviados desde el formulario en index.html
     console.log('Datos recibidos del formulario:', req.body);
-
-    // Redirige al usuario al dashboard
     res.sendFile(path.resolve(__dirname, 'public/dashboard.html'));
 });
 
@@ -32,11 +29,15 @@ app.get('/dashboard', (req, res) => {
 
 // Ruta para manejar la generación de exámenes
 app.post('/generar_examen', (req, res) => {
-    // Aquí procesarías la lógica para generar el examen
     console.log('Generando examen con datos:', req.body);
-
-    // En este ejemplo, simplemente enviamos la página de resultados
-    res.sendFile(path.resolve(__dirname, 'public/result.html'));
+    // Aquí podrías generar dinámicamente las 10 preguntas y pasarlas como JSON
+    const preguntas = [
+        // Simulación de 10 preguntas (agrega más preguntas dinámicamente si es necesario)
+        { tipo: 'Opción múltiple', pregunta: 'Pregunta 1', opciones: ['a', 'b', 'c', 'd'] },
+        { tipo: 'Pregunta abierta', pregunta: 'Pregunta 2' },
+        // ... Rellena hasta 10 preguntas
+    ];
+    res.json({ curso: req.body.curso, tema: req.body.tema, preguntas });
 });
 
 // Ruta para manejar errores de rutas no definidas
