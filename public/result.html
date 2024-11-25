@@ -7,38 +7,67 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Indicador de carga -->
-    <div id="loadingIndicator" style="display: none;">
+    <div id="loadingIndicator">
         <p>Cargando el examen, por favor espera...</p>
         <div class="spinner"></div>
     </div>
 
-    <!-- Contenedor del examen -->
     <div class="exam-container" id="examContainer" style="display: none;">
-        <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="curso"></span></p>
             <p><strong>Tema:</strong> <span id="tema"></span></p>
         </header>
-
-        <!-- Instrucciones -->
         <section class="instructions">
             <h2>Instrucciones</h2>
-            <p>Lee cada pregunta cuidadosamente antes de responder. Escribe tus respuestas en el espacio proporcionado.</p>
+            <p>Lee cada pregunta cuidadosamente antes de responder.</p>
         </section>
-
-        <!-- Preguntas -->
-        <section class="questions"></section>
-
-        <!-- Botones -->
+        <section class="questions" id="questions"></section>
         <footer>
             <button id="printButton">Imprimir Examen</button>
             <button id="generateAgain">Volver a Generar</button>
         </footer>
     </div>
 
-    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = JSON.parse('<%= JSON.stringify(preguntas) %>'); // Inserta preguntas aquí
+            const curso = '<%= curso %>';
+            const tema = '<%= tema %>';
+
+            document.getElementById("curso").textContent = curso;
+            document.getElementById("tema").textContent = tema;
+
+            const questionsContainer = document.getElementById("questions");
+            params.forEach((pregunta, index) => {
+                const questionCard = document.createElement("div");
+                questionCard.classList.add("question-card");
+                questionCard.innerHTML = `
+                    <h3>Pregunta ${index + 1}: ${pregunta.tipo}</h3>
+                    <p>${pregunta.pregunta}</p>
+                `;
+                if (pregunta.tipo === "Opción múltiple") {
+                    const ul = document.createElement("ul");
+                    pregunta.opciones.forEach(opcion => {
+                        const li = document.createElement("li");
+                        li.textContent = opcion;
+                        ul.appendChild(li);
+                    });
+                    questionCard.appendChild(ul);
+                } else {
+                    const textarea = document.createElement("textarea");
+                    textarea.placeholder = "Escribe tu respuesta aquí";
+                    questionCard.appendChild(textarea);
+                }
+                questionsContainer.appendChild(questionCard);
+            });
+
+            document.getElementById("loadingIndicator").style.display = "none";
+            document.getElementById("examContainer").style.display = "block";
+
+            document.getElementById("printButton").addEventListener("click", () => window.print());
+            document.getElementById("generateAgain").addEventListener("click", () => window.location.href = "/dashboard");
+        });
+    </script>
 </body>
 </html>
-
