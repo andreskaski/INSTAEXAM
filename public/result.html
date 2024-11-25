@@ -5,6 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Generado</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos para la impresión */
+        .exam-container {
+            max-width: 800px;
+            margin: auto;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        header, footer {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        header h1 {
+            font-size: 2em;
+            color: #007bff;
+        }
+
+        .instructions {
+            margin: 20px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .questions {
+            margin-top: 20px;
+        }
+
+        .question-card {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .question-card h3 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+
+        /* Estilo para botón de imprimir */
+        #printButton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #printButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <div class="exam-container">
@@ -23,7 +90,7 @@
 
         <!-- Preguntas -->
         <section class="questions" id="preguntas">
-            <!-- Aquí se inyectarán dinámicamente las preguntas -->
+            <!-- Las preguntas se generarán aquí dinámicamente -->
         </section>
 
         <!-- Botón para imprimir -->
@@ -40,7 +107,7 @@
             const examData = JSON.parse(localStorage.getItem("examenPreguntas"));
 
             if (examData) {
-                // Rellenar encabezado con curso y tema
+                // Rellenar encabezado
                 examCurso.textContent = examData.curso;
                 examTema.textContent = examData.tema;
 
@@ -58,6 +125,7 @@
                     questionCard.appendChild(questionTitle);
                     questionCard.appendChild(questionText);
 
+                    // Renderizar opciones si hay
                     if (pregunta.opciones) {
                         const optionsList = document.createElement("ul");
                         pregunta.opciones.forEach((opcion, idx) => {
@@ -74,7 +142,7 @@
                 preguntasContainer.innerHTML = "<p>No se encontraron preguntas para mostrar.</p>";
             }
 
-            // Botón para imprimir
+            // Botón de imprimir
             const printButton = document.getElementById("printButton");
             printButton.addEventListener("click", () => window.print());
         });
