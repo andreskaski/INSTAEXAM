@@ -1,5 +1,4 @@
-const express = require('express');
-const express = require('express');
+const express = require('express'); // Declaración única
 const path = require('path');
 
 const app = express();
@@ -37,4 +36,3 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
-
