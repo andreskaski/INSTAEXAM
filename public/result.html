@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Examen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="exam-container">
+        <header>
+            <h1>Examen Generado</h1>
+            <p>Curso: <span id="curso">Secundaria</span></p>
+            <p>Tema: <span id="tema">Matemáticas</span></p>
+        </header>
+
+        <section class="instructions">
+            <h2>Instrucciones</h2>
+            <p>Lee cuidadosamente cada pregunta antes de responder. Escribe tus respuestas en el espacio proporcionado.</p>
+        </section>
+
+        <section class="questions">
+            <div class="question-card">
+                <h3>Pregunta 1</h3>
+                <p>¿Cuál es el resultado de 2+2?</p>
+                <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
+            </div>
+
+            <div class="question-card">
+                <h3>Pregunta 2</h3>
+                <p>¿Cuál es la capital de España?</p>
+                <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
+            </div>
+        </section>
+
+        <footer>
+            <button id="printButton">Imprimir Examen</button>
+            <button id="generateAgain">Volver a Generar</button>
+        </footer>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
