@@ -2,87 +2,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingIndicator = document.getElementById("loadingIndicator");
     const examContainer = document.getElementById("examContainer");
 
-    // Obtén los datos JSON del localStorage
+    // Obtén los datos del servidor a través de localStorage o fetch
     const examData = localStorage.getItem("examenPreguntas");
-    const examCurso = localStorage.getItem("examenCurso");
-    const examTema = localStorage.getItem("examenTema");
 
-    if (examData && examCurso && examTema) {
+    if (examData) {
         try {
             const exam = JSON.parse(examData);
             loadingIndicator.style.display = "none"; // Oculta el indicador de carga
             examContainer.style.display = "block"; // Muestra el contenedor
 
             // Rellena los datos del encabezado
-            document.getElementById("examCurso").textContent = examCurso;
-            document.getElementById("examTema").textContent = examTema;
+            document.getElementById("examCurso").textContent = exam.curso;
+            document.getElementById("examTema").textContent = exam.tema;
 
             // Renderiza las preguntas dinámicamente
             const questionsSection = document.querySelector(".questions");
             questionsSection.innerHTML = ""; // Limpia cualquier contenido previo
 
-            exam.forEach((pregunta, index) => {
+            exam.preguntas.forEach((pregunta, index) => {
                 const questionCard = document.createElement("div");
                 questionCard.classList.add("question-card");
 
-                const questionTitle = document.createElement("h3");
-                questionTitle.textContent = `Pregunta ${index + 1}:`;
+                // Añade el número y texto de la pregunta
+                const questionText = document.createElement("h3");
+                questionText.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
+                const questionDetails = document.createElement("p");
+                questionDetails.textContent = pregunta.pregunta;
 
-                const questionText = document.createElement("p");
-                questionText.textContent = pregunta.pregunta;
-
-                const regenerateButton = document.createElement("button");
-                regenerateButton.textContent = "Regenerar Pregunta";
-                regenerateButton.addEventListener("click", async () => {
-                    const newQuestion = await regenerateQuestion(index);
-                    if (newQuestion) {
-                        exam[index] = newQuestion; // Sustituye la pregunta
-                        localStorage.setItem("examenPreguntas", JSON.stringify(exam));
-                        renderQuestions(); // Vuelve a renderizar
-                    }
-                });
-
-                questionCard.appendChild(questionTitle);
                 questionCard.appendChild(questionText);
+                questionCard.appendChild(questionDetails);
 
-                // Si hay opciones (preguntas de opción múltiple)
+                // Si hay opciones (pregunta de opción múltiple)
                 if (pregunta.opciones) {
                     const optionsList = document.createElement("ul");
                     pregunta.opciones.forEach((opcion, idx) => {
                         const optionItem = document.createElement("li");
-                        optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`; // a), b), c)...
+                        optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`;
                         optionsList.appendChild(optionItem);
                     });
                     questionCard.appendChild(optionsList);
                 }
 
-                questionCard.appendChild(regenerateButton);
                 questionsSection.appendChild(questionCard);
             });
-
-            // Función para regenerar preguntas específicas
-            async function regenerateQuestion(index) {
-                try {
-                    const response = await fetch("/regenerate_question", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            curso: examCurso,
-                            tema: examTema,
-                            index,
-                        }),
-                    });
-
-                    const data = await response.json();
-                    return data.pregunta; // Devuelve la nueva pregunta generada
-                } catch (error) {
-                    console.error("Error al regenerar la pregunta:", error);
-                    return null;
-                }
-            }
-
         } catch (error) {
             console.error("Error al procesar los datos del examen:", error);
         }
@@ -96,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
         printButton.addEventListener("click", () => window.print());
     }
 
-    // Botón de volver a generar
+    // Botón de volver al dashboard
     const generateAgain = document.getElementById("generateAgain");
     if (generateAgain) {
         generateAgain.addEventListener("click", () => {
