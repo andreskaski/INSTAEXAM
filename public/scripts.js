@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingIndicator = document.getElementById("loadingIndicator");
     const examContainer = document.getElementById("examContainer");
 
-    // Obtén los datos del servidor a través de localStorage o fetch
+    // Obtén los datos del servidor a través de localStorage
     const examData = localStorage.getItem("examenPreguntas");
 
     if (examData) {
@@ -20,17 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
             questionsSection.innerHTML = ""; // Limpia cualquier contenido previo
 
             exam.preguntas.forEach((pregunta, index) => {
-                const questionCard = document.createElement("div");
-                questionCard.classList.add("question-card");
+                const questionContainer = document.createElement("div");
+                questionContainer.classList.add("question-container");
 
                 // Añade el número y texto de la pregunta
-                const questionText = document.createElement("h3");
-                questionText.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
+                const questionNumber = document.createElement("h3");
+                questionNumber.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
                 const questionDetails = document.createElement("p");
                 questionDetails.textContent = pregunta.pregunta;
 
-                questionCard.appendChild(questionText);
-                questionCard.appendChild(questionDetails);
+                questionContainer.appendChild(questionNumber);
+                questionContainer.appendChild(questionDetails);
 
                 // Si hay opciones (pregunta de opción múltiple)
                 if (pregunta.opciones) {
@@ -40,10 +40,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`;
                         optionsList.appendChild(optionItem);
                     });
-                    questionCard.appendChild(optionsList);
+                    questionContainer.appendChild(optionsList);
                 }
 
-                questionsSection.appendChild(questionCard);
+                // Añadir botón para regenerar una pregunta específica
+                const regenerateButton = document.createElement("button");
+                regenerateButton.textContent = "Regenerar esta pregunta";
+                regenerateButton.classList.add("regenerate-question");
+                regenerateButton.addEventListener("click", () => regenerateQuestion(index, exam.curso, exam.tema));
+                
+                questionContainer.appendChild(regenerateButton);
+                
+                questionsSection.appendChild(questionContainer);
             });
         } catch (error) {
             console.error("Error al procesar los datos del examen:", error);
@@ -66,3 +74,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+
+// Función para regenerar una pregunta específica
+async function regenerateQuestion(index, curso, tema) {
+    try {
+        const response = await fetch('/regenerate_question', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ index, curso, tema }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al regenerar la pregunta');
+        }
+
+        const data = await response.json();
+        const examData = JSON.parse(localStorage.getItem("examenPreguntas"));
+
+        // Reemplaza la pregunta en el índice especificado
+        examData.preguntas[index] = data.pregunta;
+
+        // Actualiza el localStorage y recarga la página para reflejar los cambios
+        localStorage.setItem("examenPreguntas", JSON.stringify(examData));
+        window.location.reload();
+    } catch (error) {
+        console.error("Error al regenerar la pregunta:", error);
+    }
+}
