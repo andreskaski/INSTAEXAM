@@ -5,68 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Generado</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .exam-container {
-            max-width: 800px;
-            margin: 20px auto;
-            font-family: Arial, sans-serif;
-            color: #333;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        header h1 {
-            font-size: 2em;
-            color: #007bff;
-        }
-
-        .instructions {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 5px;
-        }
-
-        .question-card {
-            margin-bottom: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        ul li {
-            margin-bottom: 5px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        footer button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 1em;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        footer button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
     <div class="exam-container">
@@ -84,11 +22,11 @@
         </section>
 
         <!-- Preguntas -->
-        <section id="preguntas">
-            <!-- Preguntas se generan dinámicamente -->
+        <section class="questions" id="preguntas">
+            <!-- Aquí se inyectarán dinámicamente las preguntas -->
         </section>
 
-        <!-- Botón de imprimir -->
+        <!-- Botones -->
         <footer>
             <button id="printButton">Imprimir Examen</button>
         </footer>
@@ -99,33 +37,46 @@
             const preguntasContainer = document.getElementById("preguntas");
             const examCurso = document.getElementById("examCurso");
             const examTema = document.getElementById("examTema");
-            const examData = JSON.parse(localStorage.getItem("examenPreguntas"));
 
-            if (examData) {
-                // Rellenar encabezado
-                examCurso.textContent = examData.curso;
-                examTema.textContent = examData.tema;
+            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
+            const curso = localStorage.getItem("examenCurso");
+            const tema = localStorage.getItem("examenTema");
 
-                // Renderizar preguntas
-                examData.preguntas.forEach((pregunta, index) => {
+            examCurso.textContent = curso;
+            examTema.textContent = tema;
+
+            function renderQuestions() {
+                preguntasContainer.innerHTML = ""; // Limpia las preguntas anteriores
+
+                preguntas.forEach((pregunta, index) => {
                     const questionCard = document.createElement("div");
-                    questionCard.classList.add("question-card");
+                    questionCard.className = "question-card";
 
-                    const questionNumber = document.createElement("h3");
-                    questionNumber.textContent = `${index + 1}. ${pregunta.tipo}:`;
+                    const questionTitle = document.createElement("h3");
+                    questionTitle.textContent = `Pregunta ${index + 1}:`;
 
                     const questionText = document.createElement("p");
                     questionText.textContent = pregunta.pregunta;
 
-                    questionCard.appendChild(questionNumber);
-                    questionCard.appendChild(questionText);
+                    const regenerateButton = document.createElement("button");
+                    regenerateButton.textContent = "Regenerar";
+                    regenerateButton.addEventListener("click", async () => {
+                        const newQuestion = await regenerateQuestion(index);
+                        if (newQuestion) {
+                            preguntas[index] = newQuestion;
+                            renderQuestions();
+                        }
+                    });
 
-                    // Si es opción múltiple, añade las opciones
+                    questionCard.appendChild(questionTitle);
+                    questionCard.appendChild(questionText);
+                    questionCard.appendChild(regenerateButton);
+
                     if (pregunta.opciones) {
                         const optionsList = document.createElement("ul");
-                        pregunta.opciones.forEach((opcion, idx) => {
+                        pregunta.opciones.forEach(opcion => {
                             const optionItem = document.createElement("li");
-                            optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`;
+                            optionItem.textContent = opcion;
                             optionsList.appendChild(optionItem);
                         });
                         questionCard.appendChild(optionsList);
@@ -135,7 +86,28 @@
                 });
             }
 
-            // Botón para imprimir
+            async function regenerateQuestion(index) {
+                try {
+                    const response = await fetch("/regenerate_question", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            index,
+                            curso,
+                            tema
+                        }),
+                    });
+                    return await response.json();
+                } catch (error) {
+                    console.error("Error al regenerar la pregunta:", error);
+                }
+            }
+
+            renderQuestions();
+
+            // Botón de imprimir
             const printButton = document.getElementById("printButton");
             printButton.addEventListener("click", () => window.print());
         });
