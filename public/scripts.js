@@ -40,32 +40,45 @@ document.getElementById('loginForm').onsubmit = async function (e) {
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("examForm"); // Formulario de generación de exámenes
     const loadingIndicator = document.getElementById("loadingIndicator"); // Indicador de carga
+    const examContainer = document.getElementById("examContainer"); // Contenedor del examen generado
 
-    if (form) {
+    // Mostrar el indicador de carga mientras se procesa el examen
+    if (form && loadingIndicator) {
         form.addEventListener("submit", (e) => {
-            // Muestra el indicador de carga
-            loadingIndicator.style.display = "block";
+            e.preventDefault(); // Evita el envío estándar del formulario
+            loadingIndicator.style.display = "block"; // Muestra el indicador de carga
+            form.querySelector("button").disabled = true; // Desactiva el botón de envío
 
-            // Desactiva el botón para evitar múltiples envíos
-            e.target.querySelector("button").disabled = true;
+            // Simula el proceso de generación del examen antes de redirigir
+            setTimeout(() => {
+                window.location.href = "/generar_examen"; // Redirige a la página del examen generado
+            }, 1500); // Simula un retraso de 1.5 segundos
         });
     }
 
-    // Funcionalidad para la página del examen generado
-    const printButton = document.getElementById("printButton");
-    const generateAgain = document.getElementById("generateAgain");
+    // Mostrar el examen y ocultar el indicador de carga en la página de resultados
+    if (loadingIndicator && examContainer) {
+        loadingIndicator.style.display = "block";
+        setTimeout(() => {
+            loadingIndicator.style.display = "none";
+            examContainer.style.display = "block"; // Muestra el contenedor del examen
+        }, 1500); // Simula un retraso para cargar el examen
+    }
 
-    // Imprime el examen
+    // Funcionalidad para imprimir el examen
+    const printButton = document.getElementById("printButton");
     if (printButton) {
         printButton.addEventListener("click", () => {
             window.print();
         });
     }
 
-    // Redirige al usuario para volver a generar el examen
+    // Funcionalidad para volver a generar el examen
+    const generateAgain = document.getElementById("generateAgain");
     if (generateAgain) {
         generateAgain.addEventListener("click", () => {
             window.location.href = "/dashboard";
         });
     }
 });
+
