@@ -6,17 +6,20 @@
     <title>Examen Generado</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* Estilos para la impresión */
         .exam-container {
             max-width: 800px;
-            margin: auto;
+            margin: 20px auto;
             font-family: Arial, sans-serif;
             color: #333;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        header, footer {
+        header {
             text-align: center;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
 
         header h1 {
@@ -25,50 +28,43 @@
         }
 
         .instructions {
-            margin: 20px 0;
-            background: #f9f9f9;
+            margin-bottom: 20px;
             padding: 15px;
+            background: #f9f9f9;
             border-radius: 5px;
-        }
-
-        .questions {
-            margin-top: 20px;
         }
 
         .question-card {
             margin-bottom: 20px;
             padding: 15px;
-            background: #fff;
             border: 1px solid #ddd;
             border-radius: 5px;
-        }
-
-        .question-card h3 {
-            font-size: 1.2em;
-            margin-bottom: 10px;
         }
 
         ul {
             padding-left: 20px;
         }
 
-        li {
+        ul li {
             margin-bottom: 5px;
         }
 
-        /* Estilo para botón de imprimir */
-        #printButton {
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer button {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 15px;
             font-size: 1em;
-            cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            cursor: pointer;
         }
 
-        #printButton:hover {
+        footer button:hover {
             background-color: #0056b3;
         }
     </style>
@@ -89,11 +85,11 @@
         </section>
 
         <!-- Preguntas -->
-        <section class="questions" id="preguntas">
-            <!-- Las preguntas se generarán aquí dinámicamente -->
+        <section id="preguntas">
+            <!-- Preguntas se generan dinámicamente -->
         </section>
 
-        <!-- Botón para imprimir -->
+        <!-- Botón de imprimir -->
         <footer>
             <button id="printButton">Imprimir Examen</button>
         </footer>
@@ -114,23 +110,23 @@
                 // Renderizar preguntas
                 examData.preguntas.forEach((pregunta, index) => {
                     const questionCard = document.createElement("div");
-                    questionCard.className = "question-card";
+                    questionCard.classList.add("question-card");
 
-                    const questionTitle = document.createElement("h3");
-                    questionTitle.textContent = `${index + 1}. ${pregunta.tipo}:`;
+                    const questionNumber = document.createElement("h3");
+                    questionNumber.textContent = `${index + 1}. ${pregunta.tipo}:`;
 
                     const questionText = document.createElement("p");
                     questionText.textContent = pregunta.pregunta;
 
-                    questionCard.appendChild(questionTitle);
+                    questionCard.appendChild(questionNumber);
                     questionCard.appendChild(questionText);
 
-                    // Renderizar opciones si hay
+                    // Si es opción múltiple, añade las opciones
                     if (pregunta.opciones) {
                         const optionsList = document.createElement("ul");
                         pregunta.opciones.forEach((opcion, idx) => {
                             const optionItem = document.createElement("li");
-                            optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`; // a), b), c)...
+                            optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`;
                             optionsList.appendChild(optionItem);
                         });
                         questionCard.appendChild(optionsList);
@@ -138,11 +134,9 @@
 
                     preguntasContainer.appendChild(questionCard);
                 });
-            } else {
-                preguntasContainer.innerHTML = "<p>No se encontraron preguntas para mostrar.</p>";
             }
 
-            // Botón de imprimir
+            // Botón para imprimir
             const printButton = document.getElementById("printButton");
             printButton.addEventListener("click", () => window.print());
         });
