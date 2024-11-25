@@ -12,6 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
             loadingIndicator.style.display = "none"; // Oculta el indicador de carga
             examContainer.style.display = "block"; // Muestra el contenedor
 
+            // Rellena los datos del encabezado
+            document.getElementById("examCurso").textContent = exam.curso;
+            document.getElementById("examTema").textContent = exam.tema;
+
             // Renderiza las preguntas dinámicamente
             const questionsSection = document.querySelector(".questions");
             questionsSection.innerHTML = ""; // Limpia cualquier contenido previo
