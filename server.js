@@ -1,56 +1,40 @@
 const express = require('express');
+consconst express = require('express');
 const path = require('path');
-const axios = require('axios'); // Importa axios si aún no lo tienes
+
 const app = express();
-const PORT = process.env.PORT || 3000; // Usa el puerto proporcionado por Render o el 3000
+const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Sirve archivos estáticos
+// Middleware para servir archivos estáticos desde la carpeta "public"
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para la página de inicio (registro/login)
+// Middleware para procesar datos JSON (por si se requiere en otras partes)
+app.use(express.json());
+
+// Ruta principal para el formulario de inicio de sesión o registro
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Ruta para el dashboard (panel de control)
-app.post('/dashboard', (req, res) => {
+// Ruta para el dashboard (página de generación de exámenes)
+app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-// Ruta para generar el examen
-app.post('/generar_examen', async (req, res) => {
-    const { curso, tema, dificultad } = req.body;
-
-    const prompt = `Crea un examen con 10 preguntas variadas y creativas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. Las preguntas deben incluir una combinación de opción múltiple, preguntas abiertas y ejercicios prácticos. Evita repetir preguntas y proporciona solo el texto de las preguntas.`;
-
-    try {
-        const response = await axios.post(
-            'https://api.openai.com/v1/chat/completions',
-            {
-                model: 'gpt-4', // Cambia a 'gpt-3.5-turbo' si estás usando esa versión
-                messages: [
-                    { role: "user", content: prompt }
-                ],
-                max_tokens: 700,
-                temperature: 0.7
-            },
-            {
-                headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` },
-            }
-        );
-
-        const examenGenerado = response.data.choices[0].message.content.trim();
-        res.send(`<h1>Examen Generado</h1><pre>${examenGenerado}</pre><a href="/dashboard">Volver</a>`);
-    } catch (error) {
-        console.error('Error al generar el examen:', error.response ? error.response.data : error.message);
-        res.status(500).send('Error al generar el examen');
-    }
+// Ruta para manejar la generación de exámenes
+app.post('/generar_examen', (req, res) => {
+    // Aquí procesarías la lógica para generar el examen
+    // En este ejemplo, simplemente enviamos la página de resultados
+    res.sendFile(path.join(__dirname, 'public', 'result.html'));
 });
 
+// Ruta para manejar otros errores o rutas no definidas
+app.use((req, res) => {
+    res.status(404).send('Página no encontrada');
+});
+
+// Iniciar el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
 
