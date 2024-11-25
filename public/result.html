@@ -11,8 +11,8 @@
         <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
-            <p><strong>Curso:</strong> Secundaria</p>
-            <p><strong>Tema:</strong> Ciclo del Agua</p>
+            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
+            <p><strong>Tema:</strong> <span id="examTema"></span></p>
         </header>
 
         <!-- Instrucciones -->
@@ -35,10 +35,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const preguntasContainer = document.getElementById("preguntas");
-            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
+            const examCurso = document.getElementById("examCurso");
+            const examTema = document.getElementById("examTema");
+            const examData = JSON.parse(localStorage.getItem("examenPreguntas"));
 
-            if (preguntas && preguntas.length) {
-                preguntas.forEach((pregunta, index) => {
+            if (examData) {
+                // Rellenar encabezado con curso y tema
+                examCurso.textContent = examData.curso;
+                examTema.textContent = examData.tema;
+
+                // Renderizar preguntas
+                examData.preguntas.forEach((pregunta, index) => {
                     const questionCard = document.createElement("div");
                     questionCard.className = "question-card";
 
@@ -53,9 +60,9 @@
 
                     if (pregunta.opciones) {
                         const optionsList = document.createElement("ul");
-                        pregunta.opciones.forEach(opcion => {
+                        pregunta.opciones.forEach((opcion, idx) => {
                             const optionItem = document.createElement("li");
-                            optionItem.textContent = opcion;
+                            optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`; // a), b), c)...
                             optionsList.appendChild(optionItem);
                         });
                         questionCard.appendChild(optionsList);
@@ -63,6 +70,8 @@
 
                     preguntasContainer.appendChild(questionCard);
                 });
+            } else {
+                preguntasContainer.innerHTML = "<p>No se encontraron preguntas para mostrar.</p>";
             }
 
             // Botón para imprimir
