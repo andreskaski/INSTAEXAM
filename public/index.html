@@ -2,13 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Exámenes - Inicio</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Generador de Exámenes</h1>
     <div class="container">
-        <form action="/dashboard" method="POST">
+        <!-- Formulario de inicio de sesión -->
+        <form id="loginForm" action="/dashboard" method="POST">
             <label for="email">Correo Electrónico:</label>
             <input type="email" id="email" name="email" required>
 
@@ -30,5 +32,6 @@
             <button type="submit">Entrar</button>
         </form>
     </div>
+    <script src="scripts.js"></script>
 </body>
 </html>
