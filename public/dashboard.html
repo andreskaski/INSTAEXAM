@@ -20,22 +20,24 @@
         <h1>Bienvenido a tu panel</h1>
         <section id="generador">
             <h2>Generar Examen</h2>
-            <form action="/generar_examen" method="POST">
-                <label for="curso">Curso Académico:</label>
-                <input type="text" id="curso" name="curso" required>
+            <div class="container">
+                <form action="/generar_examen" method="POST">
+                    <label for="curso">Curso Académico:</label>
+                    <input type="text" id="curso" name="curso" required>
 
-                <label for="tema">Tema:</label>
-                <input type="text" id="tema" name="tema" required>
+                    <label for="tema">Tema:</label>
+                    <input type="text" id="tema" name="tema" required>
 
-                <label for="dificultad">Dificultad:</label>
-                <select id="dificultad" name="dificultad">
-                    <option value="baja">Baja</option>
-                    <option value="media">Media</option>
-                    <option value="alta">Alta</option>
-                </select>
+                    <label for="dificultad">Dificultad:</label>
+                    <select id="dificultad" name="dificultad">
+                        <option value="baja">Baja</option>
+                        <option value="media">Media</option>
+                        <option value="alta">Alta</option>
+                    </select>
 
-                <button type="submit">Generar Examen</button>
-            </form>
+                    <button type="submit">Generar Examen</button>
+                </form>
+            </div>
         </section>
     </div>
 

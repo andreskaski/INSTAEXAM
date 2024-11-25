@@ -1,4 +1,4 @@
-/* Reset de mÃ¡rgenes y paddings para asegurar uniformidad */
+/* Reset de márgenes y paddings para asegurar uniformidad */
 * {
     margin: 0;
     padding: 0;
@@ -7,15 +7,15 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    background: linear-gradient(to right, #4facfe, #00f2fe); /* Fondo gradiente */
+    color: #fff; /* Cambiar el texto del contenido a blanco */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
 }
 
-/* Sidebar para el menÃº de navegaciÃ³n */
+/* Sidebar para el menú de navegación */
 .sidebar {
     width: 200px;
     background-color: #333;
@@ -25,6 +25,11 @@ body {
     position: fixed;
     top: 0;
     left: 0;
+    transition: transform 0.3s ease; /* Transición suave */
+}
+
+.sidebar:hover {
+    transform: translateX(-10px); /* Mueve la barra ligeramente hacia la izquierda */
 }
 
 .sidebar h2 {
@@ -66,7 +71,7 @@ body {
 
 /* Contenedor de formularios y contenido */
 .container {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
     border-radius: 8px;
     padding: 20px;
     width: 100%;
@@ -74,7 +79,7 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para el tÃ­tulo principal */
+/* Estilos para el título principal */
 h1 {
     font-size: 2em;
     color: #333;
@@ -95,6 +100,7 @@ label {
 
 input[type="text"],
 input[type="password"],
+input[type="email"],
 select,
 button {
     padding: 10px;
@@ -105,23 +111,22 @@ button {
 }
 
 button {
-    background-color: #4CAF50;
-    color: white;
+    background: #007bff; /* Cambiar a un azul más vivo */
     border: none;
-    cursor: pointer;
-    margin-top: 15px;
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 15px; /* Espacio interno */
+    color: #fff; /* Texto blanco */
+    font-size: 1em; /* Ajustar el tamaño de fuente */
+    cursor: pointer; /* Cambiar el puntero al pasar el mouse */
+    transition: all 0.3s ease; /* Agregar una transición suave */
 }
 
 button:hover {
-    background-color: #45a049;
+    background: #0056b3; /* Cambiar el color al pasar el mouse */
+    transform: scale(1.05); /* Aumentar ligeramente el tamaño */
 }
 
-/* Estilos adicionales para los checkboxes */
-input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-/* BotÃ³n de cerrar sesiÃ³n */
+/* Botón de cerrar sesión */
 #logout {
     cursor: pointer;
     color: #f44336;
@@ -131,3 +136,21 @@ input[type="checkbox"] {
     text-decoration: underline;
 }
 
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%; /* La barra lateral ocupará todo el ancho */
+        height: auto; /* Ajustar la altura automáticamente */
+        position: relative; /* Ya no será fija */
+    }
+
+    .main-content {
+        margin-left: 0; /* Elimina el margen de la barra lateral */
+        width: 100%; /* Usa todo el ancho disponible */
+    }
+
+    form {
+        width: 90%; /* Ajusta el ancho del formulario para pantallas pequeñas */
+        margin: 0 auto; /* Centra el formulario */
+    }
+}
