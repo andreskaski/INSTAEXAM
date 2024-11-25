@@ -21,7 +21,8 @@
         <section id="generador">
             <h2>Generar Examen</h2>
             <div class="container">
-                <form action="/generar_examen" method="POST">
+                <!-- Agregamos el id="examForm" al formulario -->
+                <form id="examForm" action="/generar_examen" method="POST">
                     <label for="curso">Curso Académico:</label>
                     <input type="text" id="curso" name="curso" required>
 
@@ -45,6 +46,3 @@
 </body>
 </html>
 
-    <script src="dashboard.js"></script>
-</body>
-</html>
