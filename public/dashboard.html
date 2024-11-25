@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Exámenes - Panel</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -21,7 +22,7 @@
         <section id="generador">
             <h2>Generar Examen</h2>
             <div class="container">
-                <!-- Agregamos el id="examForm" al formulario -->
+                <!-- Formulario con indicador de carga -->
                 <form id="examForm" action="/generar_examen" method="POST">
                     <label for="curso">Curso Académico:</label>
                     <input type="text" id="curso" name="curso" required>
@@ -38,11 +39,22 @@
 
                     <button type="submit">Generar Examen</button>
                 </form>
+
+                <!-- Indicador de carga -->
+                <div id="loadingIndicator" style="display: none; text-align: center; margin-top: 20px;">
+                    <p>Generando el examen, por favor espera...</p>
+                    <div class="spinner"></div>
+                </div>
             </div>
         </section>
     </div>
 
-    <script src="dashboard.js"></script>
+    <script>
+        // Agregar manejo del indicador de carga
+        document.getElementById("examForm").addEventListener("submit", function (e) {
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            loadingIndicator.style.display = "block";
+        });
+    </script>
 </body>
 </html>
-
