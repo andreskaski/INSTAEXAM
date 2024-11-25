@@ -3,36 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Examen</title>
+    <title>Examen Generado</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="exam-container">
+        <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
-            <p>Curso: <span id="curso">Secundaria</span></p>
-            <p>Tema: <span id="tema">Matemáticas</span></p>
+            <p><strong>Curso:</strong> Secundaria</p>
+            <p><strong>Tema:</strong> Mitosis</p>
         </header>
 
+        <!-- Instrucciones -->
         <section class="instructions">
             <h2>Instrucciones</h2>
-            <p>Lee cuidadosamente cada pregunta antes de responder. Escribe tus respuestas en el espacio proporcionado.</p>
+            <p>Lee cada pregunta cuidadosamente antes de responder. Escribe tus respuestas en el espacio proporcionado.</p>
         </section>
 
+        <!-- Preguntas -->
         <section class="questions">
             <div class="question-card">
-                <h3>Pregunta 1</h3>
-                <p>¿Cuál es el resultado de 2+2?</p>
+                <h3>Opción múltiple:</h3>
+                <p>¿Cuál es el propósito principal de la mitosis?</p>
+                <ul>
+                    <li>a) Reproducción sexual</li>
+                    <li>b) Crecimiento y reparación de tejidos</li>
+                    <li>c) Fabricación de proteínas</li>
+                    <li>d) Distribución de energía</li>
+                </ul>
+            </div>
+
+            <div class="question-card">
+                <h3>Pregunta abierta:</h3>
+                <p>Explica brevemente el proceso de la profase en la mitosis.</p>
                 <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
             </div>
 
             <div class="question-card">
-                <h3>Pregunta 2</h3>
-                <p>¿Cuál es la capital de España?</p>
-                <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
+                <h3>Práctica:</h3>
+                <p>Dibuja un diagrama simple de las cuatro etapas de la mitosis y etiqueta cada parte.</p>
+                <textarea rows="3" placeholder="Describe tu respuesta aquí"></textarea>
             </div>
+
+            <!-- Añade más preguntas aquí -->
         </section>
 
+        <!-- Botones -->
         <footer>
             <button id="printButton">Imprimir Examen</button>
             <button id="generateAgain">Volver a Generar</button>
