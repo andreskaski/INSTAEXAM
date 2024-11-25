@@ -7,37 +7,68 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Indicador de carga -->
-    <div id="loadingIndicator">
-        <p>Cargando el examen, por favor espera...</p>
-        <div class="spinner"></div>
-    </div>
-
-    <!-- Contenedor del examen -->
-    <div class="exam-container" id="examContainer" style="display: none;">
+    <div class="exam-container">
         <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
-            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-            <p><strong>Tema:</strong> <span id="examTema"></span></p>
+            <p><strong>Curso:</strong> Secundaria</p>
+            <p><strong>Tema:</strong> Ciclo del Agua</p>
         </header>
 
         <!-- Instrucciones -->
         <section class="instructions">
             <h2>Instrucciones</h2>
-            <p>Lee cada pregunta cuidadosamente antes de responder. Escribe tus respuestas en el espacio proporcionado.</p>
+            <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
         </section>
 
         <!-- Preguntas -->
-        <section class="questions"></section>
+        <section class="questions" id="preguntas">
+            <!-- Aquí se inyectarán dinámicamente las preguntas -->
+        </section>
 
-        <!-- Botones -->
+        <!-- Botón para imprimir -->
         <footer>
             <button id="printButton">Imprimir Examen</button>
-            <button id="generateAgain">Volver a Generar</button>
         </footer>
     </div>
 
-    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const preguntasContainer = document.getElementById("preguntas");
+            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
+
+            if (preguntas && preguntas.length) {
+                preguntas.forEach((pregunta, index) => {
+                    const questionCard = document.createElement("div");
+                    questionCard.className = "question-card";
+
+                    const questionTitle = document.createElement("h3");
+                    questionTitle.textContent = `${index + 1}. ${pregunta.tipo}:`;
+
+                    const questionText = document.createElement("p");
+                    questionText.textContent = pregunta.pregunta;
+
+                    questionCard.appendChild(questionTitle);
+                    questionCard.appendChild(questionText);
+
+                    if (pregunta.opciones) {
+                        const optionsList = document.createElement("ul");
+                        pregunta.opciones.forEach(opcion => {
+                            const optionItem = document.createElement("li");
+                            optionItem.textContent = opcion;
+                            optionsList.appendChild(optionItem);
+                        });
+                        questionCard.appendChild(optionsList);
+                    }
+
+                    preguntasContainer.appendChild(questionCard);
+                });
+            }
+
+            // Botón para imprimir
+            const printButton = document.getElementById("printButton");
+            printButton.addEventListener("click", () => window.print());
+        });
+    </script>
 </body>
 </html>
