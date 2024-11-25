@@ -8,13 +8,13 @@
 </head>
 <body>
     <!-- Indicador de carga -->
-    <div id="loadingIndicator" style="display: none;">
+    <div id="loadingIndicator">
         <p>Cargando el examen, por favor espera...</p>
         <div class="spinner"></div>
     </div>
 
     <!-- Contenedor del examen -->
-    <div class="exam-container" style="display: none;" id="examContainer">
+    <div class="exam-container" id="examContainer" style="display: none;">
         <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
@@ -63,7 +63,26 @@
         </footer>
     </div>
 
-    <script src="scripts.js"></script>
+    <script>
+        // Mostrar el contenedor del examen y ocultar el indicador de carga cuando todo esté listo
+        document.addEventListener("DOMContentLoaded", () => {
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            const examContainer = document.getElementById("examContainer");
+
+            // Ocultar el indicador de carga y mostrar el contenedor
+            loadingIndicator.style.display = "none";
+            examContainer.style.display = "block";
+
+            // Botón de imprimir
+            const printButton = document.getElementById("printButton");
+            printButton.addEventListener("click", () => window.print());
+
+            // Botón de volver a generar
+            const generateAgain = document.getElementById("generateAgain");
+            generateAgain.addEventListener("click", () => {
+                window.location.href = "/dashboard";
+            });
+        });
+    </script>
 </body>
 </html>
-
