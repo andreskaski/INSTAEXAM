@@ -2,13 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingIndicator = document.getElementById("loadingIndicator");
     const examContainer = document.getElementById("examContainer");
 
-    // Obtén los datos JSON de la URL actual si fueron enviados como query params
-    const urlParams = new URLSearchParams(window.location.search);
-    const examData = urlParams.get("data");
+    // Obtén los datos JSON del localStorage
+    const examData = localStorage.getItem("examenPreguntas");
 
     if (examData) {
         try {
-            const exam = JSON.parse(decodeURIComponent(examData));
+            const exam = JSON.parse(examData);
             loadingIndicator.style.display = "none"; // Oculta el indicador de carga
             examContainer.style.display = "block"; // Muestra el contenedor
 
@@ -36,18 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Si hay opciones (preguntas de opción múltiple)
                 if (pregunta.opciones) {
                     const optionsList = document.createElement("ul");
-                    pregunta.opciones.forEach((opcion) => {
+                    pregunta.opciones.forEach((opcion, idx) => {
                         const optionItem = document.createElement("li");
-                        optionItem.textContent = opcion;
+                        optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`; // a), b), c)...
                         optionsList.appendChild(optionItem);
                     });
                     questionCard.appendChild(optionsList);
-                } else {
-                    // Si es una pregunta abierta, añade un textarea
-                    const answerArea = document.createElement("textarea");
-                    answerArea.rows = 3;
-                    answerArea.placeholder = "Escribe tu respuesta aquí";
-                    questionCard.appendChild(answerArea);
                 }
 
                 questionsSection.appendChild(questionCard);
