@@ -30,13 +30,22 @@ app.get('/dashboard', (req, res) => {
 // Ruta para manejar la generación de exámenes
 app.post('/generar_examen', (req, res) => {
     console.log('Generando examen con datos:', req.body);
-    // Aquí podrías generar dinámicamente las 10 preguntas y pasarlas como JSON
+
+    // Generación de 10 preguntas de ejemplo (puedes modificar según tu lógica)
     const preguntas = [
-        // Simulación de 10 preguntas (agrega más preguntas dinámicamente si es necesario)
-        { tipo: 'Opción múltiple', pregunta: 'Pregunta 1', opciones: ['a', 'b', 'c', 'd'] },
-        { tipo: 'Pregunta abierta', pregunta: 'Pregunta 2' },
-        // ... Rellena hasta 10 preguntas
+        { tipo: 'Opción múltiple', pregunta: '¿Cuál es la capital de Francia?', opciones: ['París', 'Londres', 'Roma', 'Madrid'] },
+        { tipo: 'Pregunta abierta', pregunta: 'Explica el ciclo del agua.' },
+        { tipo: 'Opción múltiple', pregunta: '¿Qué gas respiramos principalmente?', opciones: ['Oxígeno', 'Nitrógeno', 'Dióxido de carbono', 'Helio'] },
+        { tipo: 'Pregunta abierta', pregunta: 'Describe la función de las hojas en una planta.' },
+        { tipo: 'Opción múltiple', pregunta: '¿Cuál es el océano más grande del mundo?', opciones: ['Atlántico', 'Pacífico', 'Índico', 'Ártico'] },
+        { tipo: 'Pregunta abierta', pregunta: '¿Qué son los derechos humanos?' },
+        { tipo: 'Opción múltiple', pregunta: '¿Cuántos planetas hay en el sistema solar?', opciones: ['7', '8', '9', '10'] },
+        { tipo: 'Pregunta abierta', pregunta: 'Escribe una breve biografía de tu científico favorito.' },
+        { tipo: 'Opción múltiple', pregunta: '¿Qué órgano bombea la sangre en el cuerpo humano?', opciones: ['Hígado', 'Riñón', 'Cerebro', 'Corazón'] },
+        { tipo: 'Pregunta abierta', pregunta: 'Describe los pasos del método científico.' },
     ];
+
+    // Enviar los datos de curso, tema y preguntas como JSON
     res.json({ curso: req.body.curso, tema: req.body.tema, preguntas });
 });
 
