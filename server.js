@@ -31,7 +31,7 @@ app.get('/dashboard', (req, res) => {
 app.post('/generar_examen', (req, res) => {
     console.log('Generando examen con datos:', req.body);
 
-    // Generación de 10 preguntas de ejemplo (puedes modificar según tu lógica)
+    // Genera preguntas simuladas
     const preguntas = [
         { tipo: 'Opción múltiple', pregunta: '¿Cuál es la capital de Francia?', opciones: ['París', 'Londres', 'Roma', 'Madrid'] },
         { tipo: 'Pregunta abierta', pregunta: 'Explica el ciclo del agua.' },
@@ -42,11 +42,17 @@ app.post('/generar_examen', (req, res) => {
         { tipo: 'Opción múltiple', pregunta: '¿Cuántos planetas hay en el sistema solar?', opciones: ['7', '8', '9', '10'] },
         { tipo: 'Pregunta abierta', pregunta: 'Escribe una breve biografía de tu científico favorito.' },
         { tipo: 'Opción múltiple', pregunta: '¿Qué órgano bombea la sangre en el cuerpo humano?', opciones: ['Hígado', 'Riñón', 'Cerebro', 'Corazón'] },
-        { tipo: 'Pregunta abierta', pregunta: 'Describe los pasos del método científico.' },
+        { tipo: 'Pregunta abierta', pregunta: 'Describe los pasos del método científico.' }
     ];
 
-    // Enviar los datos de curso, tema y preguntas como JSON
-    res.json({ curso: req.body.curso, tema: req.body.tema, preguntas });
+    const examData = {
+        curso: req.body.curso,
+        tema: req.body.tema,
+        preguntas
+    };
+
+    // Redirige a la página de resultados con los datos del examen
+    res.redirect(`/result.html?data=${encodeURIComponent(JSON.stringify(examData))}`);
 });
 
 // Ruta para manejar errores de rutas no definidas
