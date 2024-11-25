@@ -24,12 +24,10 @@ app.post('/dashboard', (req, res) => {
 app.post('/generar_examen', async (req, res) => {
     const { curso, tema, dificultad } = req.body;
 
-    const prompt = `Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. 
-    Devuelve las preguntas en un formato JSON con esta estructura: 
+    const prompt = `Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. Devuelve las preguntas en un formato JSON como:
     [
         { "tipo": "Opción múltiple", "pregunta": "Pregunta aquí", "opciones": ["a", "b", "c", "d"] },
-        { "tipo": "Pregunta abierta", "pregunta": "Pregunta aquí" },
-        { "tipo": "Ejercicio práctico", "pregunta": "Pregunta aquí" }
+        { "tipo": "Pregunta abierta", "pregunta": "Pregunta aquí" }
     ]`;
 
     try {
@@ -44,22 +42,23 @@ app.post('/generar_examen', async (req, res) => {
             { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
         );
 
-        const preguntasJSON = response.data.choices[0].message.content.trim();
-        const preguntas = JSON.parse(preguntasJSON); // Asegúrate de que sea JSON válido
+        const examenPreguntas = response.data.choices[0].message.content.trim();
+        const preguntas = JSON.parse(examenPreguntas); // Convierte la respuesta en JSON válido
 
+        // Enviar los datos del examen al cliente
         res.json({ curso, tema, preguntas });
     } catch (error) {
-        console.error('Error al generar el examen:', error.response?.data || error.message);
+        console.error('Error al generar el examen:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Error al generar el examen. Inténtalo nuevamente.' });
     }
 });
 
 // Ruta para regenerar una pregunta
 app.post('/regenerate_question', async (req, res) => {
-    const { index, curso, tema, tipo } = req.body;
+    const { index, curso, tema } = req.body;
 
-    const prompt = `Genera una nueva pregunta de tipo '${tipo}' sobre el tema '${tema}' para estudiantes de ${curso}. 
-    Devuelve la pregunta en un formato JSON como: { "tipo": "Pregunta abierta", "pregunta": "Pregunta aquí" }`;
+    const prompt = `Genera una nueva pregunta sobre el tema '${tema}' para estudiantes de ${curso}. Devuelve la pregunta en un formato JSON como:
+    { "tipo": "Pregunta abierta", "pregunta": "Pregunta aquí" }`;
 
     try {
         const response = await axios.post(
@@ -73,17 +72,25 @@ app.post('/regenerate_question', async (req, res) => {
             { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
         );
 
-        const preguntaJSON = response.data.choices[0].message.content.trim();
-        const nuevaPregunta = JSON.parse(preguntaJSON); // Asegúrate de que sea JSON válido
-
+        const nuevaPregunta = JSON.parse(response.data.choices[0].message.content.trim());
         res.json({ index, pregunta: nuevaPregunta });
     } catch (error) {
-        console.error('Error al regenerar la pregunta:', error.response?.data || error.message);
+        console.error('Error al regenerar la pregunta:', error.response ? error.response.data : error.message);
         res.status(500).json({ error: 'Error al regenerar la pregunta. Inténtalo nuevamente.' });
     }
 });
 
+// Ruta para servir la página de resultados
+app.get('/result', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'result.html'));
+});
+
+// Ruta para manejar errores de rutas no definidas
+app.use((req, res) => {
+    res.status(404).send('Página no encontrada');
+});
+
 // Inicia el servidor
 app.listen(PORT, () => {
-    console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
+    console.log(`Servidor en funcionamiento en http://localhost:${PORT}`);
 });
