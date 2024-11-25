@@ -1,58 +1,71 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("examForm"); // Formulario de generación de exámenes
-    const loadingIndicator = document.getElementById("loadingIndicator"); // Indicador de carga
-    const examContainer = document.getElementById("examContainer"); // Contenedor del examen generado
+    const loadingIndicator = document.getElementById("loadingIndicator");
+    const examContainer = document.getElementById("examContainer");
 
-    // Enviar los datos y recibir las preguntas generadas
-    if (form) {
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            loadingIndicator.style.display = "block"; // Mostrar indicador de carga
+    // Obtén los datos JSON de la URL actual si fueron enviados como query params
+    const urlParams = new URLSearchParams(window.location.search);
+    const examData = urlParams.get("data");
 
-            const formData = new FormData(form);
-            const response = await fetch('/generar_examen', {
-                method: 'POST',
-                body: JSON.stringify(Object.fromEntries(formData.entries())),
-                headers: { 'Content-Type': 'application/json' },
+    if (examData) {
+        try {
+            const exam = JSON.parse(decodeURIComponent(examData));
+            loadingIndicator.style.display = "none"; // Oculta el indicador de carga
+            examContainer.style.display = "block"; // Muestra el contenedor
+
+            // Renderiza las preguntas dinámicamente
+            const questionsSection = document.querySelector(".questions");
+            questionsSection.innerHTML = ""; // Limpia cualquier contenido previo
+
+            exam.preguntas.forEach((pregunta, index) => {
+                const questionCard = document.createElement("div");
+                questionCard.classList.add("question-card");
+
+                const questionType = document.createElement("h3");
+                questionType.textContent = `${pregunta.tipo}:`;
+
+                const questionText = document.createElement("p");
+                questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
+
+                questionCard.appendChild(questionType);
+                questionCard.appendChild(questionText);
+
+                // Si hay opciones (preguntas de opción múltiple)
+                if (pregunta.opciones) {
+                    const optionsList = document.createElement("ul");
+                    pregunta.opciones.forEach((opcion) => {
+                        const optionItem = document.createElement("li");
+                        optionItem.textContent = opcion;
+                        optionsList.appendChild(optionItem);
+                    });
+                    questionCard.appendChild(optionsList);
+                } else {
+                    // Si es una pregunta abierta, añade un textarea
+                    const answerArea = document.createElement("textarea");
+                    answerArea.rows = 3;
+                    answerArea.placeholder = "Escribe tu respuesta aquí";
+                    questionCard.appendChild(answerArea);
+                }
+
+                questionsSection.appendChild(questionCard);
             });
-
-            const result = await response.json();
-            loadingIndicator.style.display = "none"; // Ocultar el indicador de carga
-            displayExam(result); // Muestra las preguntas generadas en la página
-        });
+        } catch (error) {
+            console.error("Error al procesar los datos del examen:", error);
+        }
+    } else {
+        console.error("No se encontraron datos para generar el examen.");
     }
 
-    // Mostrar las preguntas generadas
-    const displayExam = (data) => {
-        const examContainer = document.getElementById("examContainer");
-        const questionsContainer = document.querySelector(".questions");
+    // Botón de imprimir
+    const printButton = document.getElementById("printButton");
+    if (printButton) {
+        printButton.addEventListener("click", () => window.print());
+    }
 
-        questionsContainer.innerHTML = ""; // Limpia las preguntas anteriores
-        data.preguntas.forEach((pregunta, index) => {
-            const questionCard = document.createElement("div");
-            questionCard.classList.add("question-card");
-
-            if (pregunta.tipo === "Opción múltiple") {
-                questionCard.innerHTML = `
-                    <h3>Pregunta ${index + 1}:</h3>
-                    <p>${pregunta.pregunta}</p>
-                    <ul>
-                        ${pregunta.opciones.map(op => `<li>${op}</li>`).join("")}
-                    </ul>
-                `;
-            } else {
-                questionCard.innerHTML = `
-                    <h3>Pregunta ${index + 1}:</h3>
-                    <p>${pregunta.pregunta}</p>
-                    <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
-                `;
-            }
-
-            questionsContainer.appendChild(questionCard);
+    // Botón de volver a generar
+    const generateAgain = document.getElementById("generateAgain");
+    if (generateAgain) {
+        generateAgain.addEventListener("click", () => {
+            window.location.href = "/dashboard";
         });
-
-        examContainer.style.display = "block"; // Mostrar contenedor del examen
-    };
+    }
 });
-
-
