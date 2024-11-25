@@ -8,7 +8,7 @@
 </head>
 <body>
     <!-- Indicador de carga -->
-    <div id="loadingIndicator">
+    <div id="loadingIndicator" style="display: none;">
         <p>Cargando el examen, por favor espera...</p>
         <div class="spinner"></div>
     </div>
@@ -18,8 +18,8 @@
         <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
-            <p><strong>Curso:</strong> Secundaria</p>
-            <p><strong>Tema:</strong> Ciclo del Agua</p>
+            <p><strong>Curso:</strong> <span id="curso"></span></p>
+            <p><strong>Tema:</strong> <span id="tema"></span></p>
         </header>
 
         <!-- Instrucciones -->
@@ -29,32 +29,7 @@
         </section>
 
         <!-- Preguntas -->
-        <section class="questions">
-            <div class="question-card">
-                <h3>Opción múltiple:</h3>
-                <p>¿Cuáles son las tres formas básicas en las que el agua puede existir en la Tierra?</p>
-                <ul>
-                    <li>a) Líquida, sólida y gaseosa</li>
-                    <li>b) Líquida, sólida y plástica</li>
-                    <li>c) Líquida, gaseosa y transparente</li>
-                    <li>d) Sólida, transparente y gaseosa</li>
-                </ul>
-            </div>
-
-            <div class="question-card">
-                <h3>Pregunta abierta:</h3>
-                <p>Explica en tus propias palabras qué es la transpiración en el ciclo del agua y por qué es importante.</p>
-                <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
-            </div>
-
-            <div class="question-card">
-                <h3>Práctica:</h3>
-                <p>Dibuja un diagrama simple del ciclo del agua y etiqueta correctamente cada paso.</p>
-                <textarea rows="3" placeholder="Describe tu respuesta aquí"></textarea>
-            </div>
-
-            <!-- Más preguntas -->
-        </section>
+        <section class="questions"></section>
 
         <!-- Botones -->
         <footer>
@@ -63,26 +38,7 @@
         </footer>
     </div>
 
-    <script>
-        // Mostrar el contenedor del examen y ocultar el indicador de carga cuando todo esté listo
-        document.addEventListener("DOMContentLoaded", () => {
-            const loadingIndicator = document.getElementById("loadingIndicator");
-            const examContainer = document.getElementById("examContainer");
-
-            // Ocultar el indicador de carga y mostrar el contenedor
-            loadingIndicator.style.display = "none";
-            examContainer.style.display = "block";
-
-            // Botón de imprimir
-            const printButton = document.getElementById("printButton");
-            printButton.addEventListener("click", () => window.print());
-
-            // Botón de volver a generar
-            const generateAgain = document.getElementById("generateAgain");
-            generateAgain.addEventListener("click", () => {
-                window.location.href = "/dashboard";
-            });
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
+
