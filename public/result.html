@@ -7,12 +7,19 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="exam-container">
+    <!-- Indicador de carga -->
+    <div id="loadingIndicator" style="display: none;">
+        <p>Cargando el examen, por favor espera...</p>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Contenedor del examen -->
+    <div class="exam-container" style="display: none;" id="examContainer">
         <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> Secundaria</p>
-            <p><strong>Tema:</strong> Mitosis</p>
+            <p><strong>Tema:</strong> Ciclo del Agua</p>
         </header>
 
         <!-- Instrucciones -->
@@ -25,28 +32,28 @@
         <section class="questions">
             <div class="question-card">
                 <h3>Opción múltiple:</h3>
-                <p>¿Cuál es el propósito principal de la mitosis?</p>
+                <p>¿Cuáles son las tres formas básicas en las que el agua puede existir en la Tierra?</p>
                 <ul>
-                    <li>a) Reproducción sexual</li>
-                    <li>b) Crecimiento y reparación de tejidos</li>
-                    <li>c) Fabricación de proteínas</li>
-                    <li>d) Distribución de energía</li>
+                    <li>a) Líquida, sólida y gaseosa</li>
+                    <li>b) Líquida, sólida y plástica</li>
+                    <li>c) Líquida, gaseosa y transparente</li>
+                    <li>d) Sólida, transparente y gaseosa</li>
                 </ul>
             </div>
 
             <div class="question-card">
                 <h3>Pregunta abierta:</h3>
-                <p>Explica brevemente el proceso de la profase en la mitosis.</p>
+                <p>Explica en tus propias palabras qué es la transpiración en el ciclo del agua y por qué es importante.</p>
                 <textarea rows="3" placeholder="Escribe tu respuesta aquí"></textarea>
             </div>
 
             <div class="question-card">
                 <h3>Práctica:</h3>
-                <p>Dibuja un diagrama simple de las cuatro etapas de la mitosis y etiqueta cada parte.</p>
+                <p>Dibuja un diagrama simple del ciclo del agua y etiqueta correctamente cada paso.</p>
                 <textarea rows="3" placeholder="Describe tu respuesta aquí"></textarea>
             </div>
 
-            <!-- Añade más preguntas aquí -->
+            <!-- Más preguntas -->
         </section>
 
         <!-- Botones -->
@@ -59,3 +66,4 @@
     <script src="scripts.js"></script>
 </body>
 </html>
+
