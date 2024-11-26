@@ -7,28 +7,27 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Servir archivos estáticos
+// Sirve archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Página principal
+// Ruta para la página de inicio
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Dashboard
+// Ruta para el dashboard
 app.post('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-// Generar examen
+// Ruta para generar el examen
 app.post('/generar_examen', async (req, res) => {
     const { curso, tema, dificultad } = req.body;
 
     const prompt = `
-        Crea un examen con 10 preguntas sobre el tema '${tema}' para estudiantes de ${curso}, con una dificultad de nivel '${dificultad}'. 
-        Usa un máximo de 2 preguntas de opción múltiple. Las demás deben ser preguntas abiertas o ejercicios prácticos. 
-        Devuelve un JSON con un array de objetos donde cada objeto tenga las claves:
-        'tipo' (opción múltiple, pregunta abierta, ejercicio práctico), 'pregunta' y opcionalmente 'opciones' (si es opción múltiple).
+    Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}.
+    Máximo 2 preguntas de opción múltiple. Las demás deben ser preguntas abiertas o ejercicios prácticos.
+    Devuelve las preguntas en formato JSON como un array de objetos con las claves: 'tipo' (opción múltiple, pregunta abierta, ejercicio práctico), 'pregunta', y opcionalmente 'opciones' (solo para preguntas de opción múltiple).
     `;
 
     try {
@@ -49,22 +48,24 @@ app.post('/generar_examen', async (req, res) => {
             const preguntasGeneradas = JSON.parse(rawResponse);
             res.json({ curso, tema, preguntas: preguntasGeneradas });
         } catch (jsonError) {
-            console.error('Error al parsear JSON:', jsonError.message);
-            res.status(500).send('La respuesta no es un JSON válido.');
+            console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
+            console.error('Respuesta de OpenAI:', rawResponse);
+            res.status(500).send('Error al generar el examen. La respuesta no es válida.');
         }
     } catch (error) {
-        console.error('Error al generar el examen:', error.message);
+        console.error('Error al llamar a la API de OpenAI:', error.message);
         res.status(500).send('Error al generar el examen.');
     }
 });
 
-// Regenerar una pregunta
+// Ruta para regenerar una pregunta
 app.post('/regenerate_question', async (req, res) => {
     const { index, curso, tema } = req.body;
 
     const prompt = `
-        Genera una nueva pregunta sobre el tema '${tema}' para estudiantes de ${curso}. 
-        Devuelve un JSON con las claves 'tipo', 'pregunta', y opcionalmente 'opciones' si es opción múltiple.
+    Genera una nueva pregunta sobre el tema '${tema}' para estudiantes de ${curso}.
+    La pregunta puede ser abierta, práctica o de opción múltiple (máximo 2 en total para todo el examen).
+    Devuelve la pregunta en formato JSON con las claves: 'tipo', 'pregunta', y opcionalmente 'opciones'.
     `;
 
     try {
@@ -85,8 +86,9 @@ app.post('/regenerate_question', async (req, res) => {
             const nuevaPregunta = JSON.parse(rawResponse);
             res.json({ pregunta: nuevaPregunta });
         } catch (jsonError) {
-            console.error('Error al parsear JSON:', jsonError.message);
-            res.status(500).send('La respuesta no es un JSON válido.');
+            console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
+            console.error('Respuesta de OpenAI:', rawResponse);
+            res.status(500).send('Error al regenerar la pregunta. La respuesta no es válida.');
         }
     } catch (error) {
         console.error('Error al regenerar la pregunta:', error.message);
@@ -94,7 +96,8 @@ app.post('/regenerate_question', async (req, res) => {
     }
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
 });
+
+
