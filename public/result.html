@@ -8,28 +8,126 @@
 </head>
 <body>
     <div class="exam-container">
-        <!-- Encabezado -->
-        <header>
-            <h1>Examen Generado</h1>
-            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-            <p><strong>Tema:</strong> <span id="examTema"></span></p>
-        </header>
+        <!-- Indicador de carga -->
+        <div id="loadingIndicator" class="loading">
+            <p>Generando examen, por favor espera...</p>
+        </div>
 
-        <!-- Instrucciones -->
-        <section class="instructions">
-            <h2>Instrucciones</h2>
-            <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen. Puedes regenerar preguntas si lo deseas.</p>
-        </section>
+        <!-- Contenedor principal del examen -->
+        <div id="examContent" style="display: none;">
+            <!-- Encabezado -->
+            <header>
+                <h1>Examen Generado</h1>
+                <p><strong>Curso:</strong> <span id="examCurso"></span></p>
+                <p><strong>Tema:</strong> <span id="examTema"></span></p>
+            </header>
 
-        <!-- Preguntas -->
-        <section id="preguntas" class="questions"></section>
+            <!-- Instrucciones -->
+            <section class="instructions">
+                <h2>Instrucciones</h2>
+                <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
+            </section>
 
-        <!-- Botones -->
-        <footer>
-            <button id="printButton" class="action-btn">Imprimir Examen</button>
-        </footer>
+            <!-- Preguntas -->
+            <section class="questions" id="preguntas">
+                <!-- Las preguntas se generarán aquí dinámicamente -->
+            </section>
+
+            <!-- Botón de imprimir -->
+            <footer>
+                <button id="printButton">Imprimir Examen</button>
+            </footer>
+        </div>
     </div>
 
-    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const loadingIndicator = document.getElementById("loadingIndicator");
+            const examContent = document.getElementById("examContent");
+            const preguntasContainer = document.getElementById("preguntas");
+            const examCurso = document.getElementById("examCurso");
+            const examTema = document.getElementById("examTema");
+
+            // Simula el tiempo de carga y obtén datos
+            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas")) || [];
+            const curso = localStorage.getItem("examenCurso") || "Sin especificar";
+            const tema = localStorage.getItem("examenTema") || "Sin especificar";
+
+            examCurso.textContent = curso;
+            examTema.textContent = tema;
+
+            function renderQuestions() {
+                preguntasContainer.innerHTML = ""; // Limpia preguntas anteriores
+
+                preguntas.forEach((pregunta, index) => {
+                    const questionCard = document.createElement("div");
+                    questionCard.className = "question-card";
+
+                    const questionTitle = document.createElement("h3");
+                    questionTitle.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
+
+                    const questionText = document.createElement("p");
+                    questionText.textContent = pregunta.pregunta;
+
+                    const regenerateButton = document.createElement("button");
+                    regenerateButton.textContent = "Regenerar";
+                    regenerateButton.addEventListener("click", async () => {
+                        const newQuestion = await regenerateQuestion(index);
+                        if (newQuestion) {
+                            preguntas[index] = newQuestion;
+                            renderQuestions();
+                        }
+                    });
+
+                    questionCard.appendChild(questionTitle);
+                    questionCard.appendChild(questionText);
+                    questionCard.appendChild(regenerateButton);
+
+                    if (pregunta.opciones) {
+                        const optionsList = document.createElement("ul");
+                        pregunta.opciones.forEach(opcion => {
+                            const optionItem = document.createElement("li");
+                            optionItem.textContent = opcion;
+                            optionsList.appendChild(optionItem);
+                        });
+                        questionCard.appendChild(optionsList);
+                    }
+
+                    preguntasContainer.appendChild(questionCard);
+                });
+            }
+
+            async function regenerateQuestion(index) {
+                try {
+                    const response = await fetch("/regenerate_question", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            index,
+                            curso,
+                            tema,
+                        }),
+                    });
+                    const data = await response.json();
+                    return data.pregunta;
+                } catch (error) {
+                    console.error("Error al regenerar la pregunta:", error);
+                }
+            }
+
+            // Simula un tiempo de carga de 2 segundos
+            setTimeout(() => {
+                renderQuestions();
+                loadingIndicator.style.display = "none"; // Oculta el indicador de carga
+                examContent.style.display = "block"; // Muestra el contenido del examen
+            }, 2000);
+
+            // Botón de imprimir
+            const printButton = document.getElementById("printButton");
+            printButton.addEventListener("click", () => window.print());
+        });
+    </script>
 </body>
 </html>
