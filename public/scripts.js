@@ -1,76 +1,68 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const preguntasContainer = document.getElementById("preguntas");
+    const loadingIndicator = document.getElementById("loadingIndicator");
+    const examContainer = document.getElementById("examContainer");
+    const questionsContainer = document.getElementById("questionsContainer");
     const examCurso = document.getElementById("examCurso");
     const examTema = document.getElementById("examTema");
+    const printButton = document.getElementById("printButton");
 
-    const examData = JSON.parse(localStorage.getItem("examen"));
+    const examData = JSON.parse(localStorage.getItem("examenPreguntas")) || {};
     const { curso, tema, preguntas } = examData;
 
-    examCurso.textContent = curso;
-    examTema.textContent = tema;
+    // Mostrar spinner mientras se cargan los datos
+    loadingIndicator.style.display = "block";
 
-    // Renderizar preguntas
-    const renderQuestions = () => {
-        preguntasContainer.innerHTML = ""; // Limpiar contenedor
+    // Simular retraso para mostrar spinner (solo para efecto visual)
+    setTimeout(() => {
+        if (curso && tema && preguntas) {
+            examCurso.textContent = curso;
+            examTema.textContent = tema;
 
-        preguntas.forEach((pregunta, index) => {
-            const questionDiv = document.createElement("div");
-            questionDiv.classList.add("question");
+            // Renderizar preguntas
+            preguntas.forEach((pregunta, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
 
-            const questionTitle = document.createElement("h3");
-            questionTitle.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
-            questionDiv.appendChild(questionTitle);
+                // Texto de la pregunta
+                const questionText = document.createElement("p");
+                questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
+                questionDiv.appendChild(questionText);
 
-            const questionText = document.createElement("p");
-            questionText.textContent = pregunta.pregunta;
-            questionDiv.appendChild(questionText);
-
-            // Opciones si es de opción múltiple
-            if (pregunta.opciones) {
-                const optionsList = document.createElement("ul");
-                pregunta.opciones.forEach((opcion, i) => {
-                    const optionItem = document.createElement("li");
-                    optionItem.textContent = `${String.fromCharCode(97 + i)}) ${opcion}`;
-                    optionsList.appendChild(optionItem);
-                });
-                questionDiv.appendChild(optionsList);
-            }
-
-            // Botón de regenerar pregunta
-            const regenerateBtn = document.createElement("button");
-            regenerateBtn.textContent = "Regenerar";
-            regenerateBtn.classList.add("regenerate-btn");
-            regenerateBtn.addEventListener("click", async () => {
-                const nuevaPregunta = await regenerateQuestion(index);
-                if (nuevaPregunta) {
-                    preguntas[index] = nuevaPregunta;
-                    renderQuestions();
+                // Opciones si es de opción múltiple
+                if (pregunta.opciones) {
+                    const optionsDiv = document.createElement("div");
+                    optionsDiv.classList.add("options");
+                    pregunta.opciones.forEach((opcion, i) => {
+                        const optionText = document.createElement("p");
+                        optionText.textContent = `${String.fromCharCode(97 + i)}. ${opcion}`;
+                        optionsDiv.appendChild(optionText);
+                    });
+                    questionDiv.appendChild(optionsDiv);
                 }
-            });
-            questionDiv.appendChild(regenerateBtn);
 
-            preguntasContainer.appendChild(questionDiv);
-        });
-    };
+                // Botón para regenerar pregunta
+                const regenerateButton = document.createElement("button");
+                regenerateButton.textContent = "Regenerar";
+                regenerateButton.addEventListener("click", () => regenerateQuestion(index));
+                questionDiv.appendChild(regenerateButton);
 
-    // Función para regenerar pregunta
-    const regenerateQuestion = async (index) => {
-        try {
-            const response = await fetch("/regenerate_question", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ index, curso, tema }),
+                questionsContainer.appendChild(questionDiv);
             });
-            const data = await response.json();
-            return data.pregunta;
-        } catch (error) {
-            console.error("Error al regenerar la pregunta:", error);
+
+            // Mostrar contenedor del examen
+            loadingIndicator.style.display = "none";
+            examContainer.style.display = "block";
+        } else {
+            alert("Error: No se encontraron datos del examen.");
         }
-    };
+    }, 1000);
 
-    // Botón de impresión
-    const printButton = document.getElementById("printButton");
+    // Función para regenerar una pregunta
+    function regenerateQuestion(index) {
+        alert(`Regenerando la pregunta ${index + 1}...`);
+        // Aquí puedes agregar la lógica para regenerar preguntas desde el servidor
+    }
+
+    // Funcionalidad de impresión
     printButton.addEventListener("click", () => window.print());
-
-    renderQuestions();
 });
