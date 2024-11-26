@@ -6,138 +6,70 @@
     <title>Examen Generado</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom, #1E90FF, #87CEFA);
-            color: #333;
+            font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            padding: 20px;
         }
         .exam-container {
-            background: #fff;
-            width: 80%;
-            max-width: 900px;
+            background: white;
             padding: 20px;
+            width: 100%;
+            max-width: 800px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .exam-title {
-            text-align: center;
+        .question {
             margin-bottom: 20px;
         }
-        .question {
-            margin: 15px 0;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .question:last-child {
-            border-bottom: none;
-        }
-        .question button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #1E90FF;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .question button:hover {
-            background-color: #4682B4;
-        }
-        #printButton {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #32CD32;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #printButton:hover {
-            background-color: #228B22;
-        }
-        #loadingIndicator {
-            display: none;
-            text-align: center;
-            font-size: 18px;
-            color: #555;
+        button {
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <div id="loadingIndicator">Generando el examen, por favor espera...</div>
+    <div id="loadingIndicator">Cargando...</div>
     <div class="exam-container" id="examContainer" style="display: none;">
-        <div class="exam-title">
-            <h1>Examen Generado</h1>
-            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-            <p><strong>Tema:</strong> <span id="examTema"></span></p>
-        </div>
+        <h1>Examen Generado</h1>
+        <p><strong>Curso:</strong> <span id="examCurso"></span></p>
+        <p><strong>Tema:</strong> <span id="examTema"></span></p>
         <div id="questionsContainer"></div>
-        <button id="printButton">Imprimir Examen</button>
+        <button onclick="window.print()">Imprimir Examen</button>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
             const loadingIndicator = document.getElementById("loadingIndicator");
             const examContainer = document.getElementById("examContainer");
             const questionsContainer = document.getElementById("questionsContainer");
-            const examCurso = document.getElementById("examCurso");
-            const examTema = document.getElementById("examTema");
-            const printButton = document.getElementById("printButton");
 
-            const examData = JSON.parse(localStorage.getItem("examenPreguntas")) || {};
-            const { curso, tema, preguntas } = examData;
+            loadingIndicator.style.display = "block";
 
-            if (curso && tema && preguntas) {
-                examCurso.textContent = curso;
-                examTema.textContent = tema;
+            const response = await fetch('/generar_examen', { method: 'POST' });
+            const examData = await response.json();
 
-                preguntas.forEach((pregunta, index) => {
-                    const questionDiv = document.createElement("div");
-                    questionDiv.classList.add("question");
+            loadingIndicator.style.display = "none";
+            examContainer.style.display = "block";
 
-                    const questionText = document.createElement("p");
-                    questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
-
-                    const regenerateButton = document.createElement("button");
-                    regenerateButton.textContent = "Regenerar";
-                    regenerateButton.addEventListener("click", () => regenerateQuestion(index));
-
-                    questionDiv.appendChild(questionText);
-
-                    if (pregunta.opciones) {
-                        const optionsList = document.createElement("ul");
-                        pregunta.opciones.forEach(opcion => {
-                            const optionItem = document.createElement("li");
-                            optionItem.textContent = opcion;
-                            optionsList.appendChild(optionItem);
-                        });
-                        questionDiv.appendChild(optionsList);
-                    }
-
-                    questionDiv.appendChild(regenerateButton);
-                    questionsContainer.appendChild(questionDiv);
-                });
-
-                loadingIndicator.style.display = "none";
-                examContainer.style.display = "block";
-            } else {
-                alert("No se encontraron datos del examen.");
-            }
-
-            function regenerateQuestion(index) {
-                // Aquí se hará la lógica para regenerar preguntas
-                alert(`Regenerando pregunta ${index + 1}`);
-            }
-
-            printButton.addEventListener("click", () => window.print());
+            examData.preguntas.forEach((pregunta, i) => {
+                const div = document.createElement("div");
+                div.className = "question";
+                div.innerHTML = `<p>${i + 1}. ${pregunta.pregunta}</p>`;
+                if (pregunta.opciones) {
+                    const ul = document.createElement("ul");
+                    pregunta.opciones.forEach(opcion => {
+                        const li = document.createElement("li");
+                        li.textContent = opcion;
+                        ul.appendChild(li);
+                    });
+                    div.appendChild(ul);
+                }
+                questionsContainer.appendChild(div);
+            });
         });
     </script>
 </body>
 </html>
-
