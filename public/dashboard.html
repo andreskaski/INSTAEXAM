@@ -15,44 +15,65 @@
             align-items: center;
             height: 100vh;
         }
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            text-align: center;
-            width: 80%;
-            max-width: 500px;
-        }
-        .card {
+        .container {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
         }
-        .card button {
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        select, button {
             width: 100%;
             padding: 10px;
-            background-color: #1E90FF;
-            color: white;
+            margin: 10px 0;
             border: none;
             border-radius: 5px;
+            font-size: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background-color: #1E90FF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4682B4;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="card">
-            <h2>Generar Examen</h2>
-            <button onclick="location.href='/generar_examen'">Ir</button>
-        </div>
-        <div class="card">
-            <h2>Perfil</h2>
-            <button>Ir</button>
-        </div>
-        <div class="card">
-            <h2>Ayuda</h2>
-            <button>Ir</button>
-        </div>
+    <div class="container">
+        <h1>Generar Examen</h1>
+        <form action="/generar_examen" method="POST">
+            <select name="curso" required>
+                <option value="" disabled selected>Curso Académico</option>
+                <option value="1º ESO">1º ESO</option>
+                <option value="2º ESO">2º ESO</option>
+                <option value="3º ESO">3º ESO</option>
+                <option value="4º ESO">4º ESO</option>
+            </select>
+            <select name="tema" required>
+                <option value="" disabled selected>Tema</option>
+                <option value="Ciencias">Ciencias</option>
+                <option value="Matemáticas">Matemáticas</option>
+                <option value="Historia">Historia</option>
+                <option value="Lengua">Lengua</option>
+            </select>
+            <select name="dificultad" required>
+                <option value="" disabled selected>Dificultad</option>
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+            </select>
+            <button type="submit">Generar Examen</button>
+        </form>
     </div>
 </body>
 </html>
+
