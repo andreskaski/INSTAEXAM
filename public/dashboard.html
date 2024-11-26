@@ -6,41 +6,42 @@
     <title>Dashboard</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom, #1E90FF, #87CEFA);
-            font-family: Arial, sans-serif;
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
         .container {
-            background: white;
+            background: #fff;
+            color: #333;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
+            width: 80%;
+            max-width: 500px;
         }
         h1 {
             margin-bottom: 20px;
-            color: #333;
         }
-        select, button {
+        select, input, button {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border: none;
             border-radius: 5px;
-            font-size: 16px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         button {
             background-color: #1E90FF;
-            color: white;
+            color: #fff;
             cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
             background-color: #4682B4;
@@ -49,24 +50,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>Generar Examen</h1>
+        <h1>Panel de Control</h1>
         <form action="/generar_examen" method="POST">
             <select name="curso" required>
-                <option value="" disabled selected>Curso Académico</option>
-                <option value="1º ESO">1º ESO</option>
-                <option value="2º ESO">2º ESO</option>
-                <option value="3º ESO">3º ESO</option>
-                <option value="4º ESO">4º ESO</option>
+                <option value="" disabled selected>Selecciona el curso académico</option>
+                <optgroup label="Primaria">
+                    <option value="5º Primaria">5º Primaria</option>
+                    <option value="6º Primaria">6º Primaria</option>
+                </optgroup>
+                <optgroup label="Secundaria">
+                    <option value="1º ESO">1º ESO</option>
+                    <option value="2º ESO">2º ESO</option>
+                    <option value="3º ESO">3º ESO</option>
+                    <option value="4º ESO">4º ESO</option>
+                </optgroup>
+                <optgroup label="Bachillerato">
+                    <option value="1º Bachillerato">1º Bachillerato</option>
+                    <option value="2º Bachillerato">2º Bachillerato</option>
+                </optgroup>
             </select>
-            <select name="tema" required>
-                <option value="" disabled selected>Tema</option>
-                <option value="Ciencias">Ciencias</option>
-                <option value="Matemáticas">Matemáticas</option>
-                <option value="Historia">Historia</option>
-                <option value="Lengua">Lengua</option>
-            </select>
+            <input type="text" name="tema" placeholder="Tema del examen" required>
             <select name="dificultad" required>
-                <option value="" disabled selected>Dificultad</option>
+                <option value="" disabled selected>Selecciona la dificultad</option>
                 <option value="Baja">Baja</option>
                 <option value="Media">Media</option>
                 <option value="Alta">Alta</option>
@@ -76,4 +81,3 @@
     </div>
 </body>
 </html>
-
