@@ -9,40 +9,54 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #f8f9fa;
         }
         .exam-container {
-            width: 90%;
+            max-width: 800px;
             margin: 20px auto;
-            background: #fff;
             padding: 20px;
+            background: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        h1, h2 {
+        h1 {
             text-align: center;
             color: #007bff;
         }
-        .question {
+        .instructions {
             margin-bottom: 20px;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
+        }
+        .question {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .question h3 {
+            margin: 0;
         }
         button {
-            padding: 10px 15px;
+            margin-top: 10px;
+            padding: 8px 12px;
             background-color: #007bff;
             color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
     <div class="exam-container">
         <h1>Examen Generado</h1>
-        <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-        <p><strong>Tema:</strong> <span id="examTema"></span></p>
+        <div class="instructions">
+            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
+            <p><strong>Tema:</strong> <span id="examTema"></span></p>
+            <p>Responde las siguientes preguntas:</p>
+        </div>
         <div id="preguntas"></div>
         <button id="printButton">Imprimir Examen</button>
     </div>
@@ -60,7 +74,8 @@
                 const questionDiv = document.createElement("div");
                 questionDiv.className = "question";
                 questionDiv.innerHTML = `
-                    <p><strong>Pregunta ${index + 1}:</strong> ${pregunta.pregunta}</p>
+                    <h3>Pregunta ${index + 1}:</h3>
+                    <p>${pregunta.pregunta}</p>
                     ${pregunta.opciones ? `<ul>${pregunta.opciones.map(op => `<li>${op}</li>`).join('')}</ul>` : ''}
                     <button onclick="regenerateQuestion(${index})">Regenerar Pregunta</button>
                 `;
