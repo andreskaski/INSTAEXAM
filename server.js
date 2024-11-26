@@ -10,12 +10,12 @@ app.use(express.json());
 // Sirve archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para la página de inicio (registro/login)
+// Ruta para la página de inicio
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Ruta para el dashboard (panel de control)
+// Ruta para el dashboard
 app.post('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
@@ -25,8 +25,7 @@ app.post('/generar_examen', async (req, res) => {
     const { curso, tema, dificultad } = req.body;
 
     const prompt = `Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. 
-    Devuelve las preguntas en formato JSON como un array de objetos con las claves: 
-    'tipo' (Opción múltiple, Pregunta abierta, Ejercicio práctico), 'pregunta', y opcionalmente 'opciones' (array de opciones para preguntas de opción múltiple).`;
+    Incluye un máximo de 2 preguntas de opción múltiple, el resto deben ser preguntas abiertas y prácticas. Devuelve las preguntas en formato JSON con las claves: 'tipo', 'pregunta', y 'opciones' (opcional para preguntas de opción múltiple).`;
 
     try {
         const response = await axios.post(
@@ -44,15 +43,7 @@ app.post('/generar_examen', async (req, res) => {
 
         try {
             const preguntasGeneradas = JSON.parse(rawResponse);
-            // Guarda el JSON en el navegador
-            res.send(`
-                <script>
-                    localStorage.setItem("examenPreguntas", JSON.stringify(${JSON.stringify(preguntasGeneradas)}));
-                    localStorage.setItem("examenCurso", "${curso}");
-                    localStorage.setItem("examenTema", "${tema}");
-                    window.location.href = "/result.html";
-                </script>
-            `);
+            res.json({ curso, tema, preguntas: preguntasGeneradas });
         } catch (jsonError) {
             console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
             console.error('Respuesta de OpenAI:', rawResponse);
@@ -64,7 +55,7 @@ app.post('/generar_examen', async (req, res) => {
     }
 });
 
-// Ruta para regenerar una pregunta
+// Ruta para regenerar una pregunta específica
 app.post('/regenerate_question', async (req, res) => {
     const { index, curso, tema } = req.body;
 
