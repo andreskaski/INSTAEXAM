@@ -1,72 +1,47 @@
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background: linear-gradient(to right, #6dd5ed, #2193b0);
-    color: #333;
     margin: 0;
     padding: 0;
+    background: linear-gradient(to bottom, #1E90FF, #87CEFA);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .exam-container {
-    max-width: 800px;
-    margin: 20px auto;
     background: #fff;
+    width: 90%;
+    max-width: 800px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-header h1 {
+.exam-header {
     text-align: center;
-    margin-bottom: 10px;
-    color: #2193b0;
+    margin-bottom: 20px;
 }
 
-.instructions {
-    background: #e3f2fd;
+.question {
+    margin: 15px 0;
     padding: 10px;
-    border-left: 5px solid #2193b0;
-    margin-bottom: 20px;
-    border-radius: 5px;
+    border-bottom: 1px solid #ddd;
 }
 
-.questions .question {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background: #f9f9f9;
+.question:last-child {
+    border-bottom: none;
 }
 
-.questions .question h3 {
-    margin: 0;
-    color: #555;
-}
-
-.questions .question ul {
-    padding-left: 20px;
-}
-
-.action-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background: #2193b0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.action-btn:hover {
-    background: #1b789e;
+.options p {
+    margin-left: 20px;
 }
 
 .regenerate-btn {
     margin-top: 10px;
     padding: 5px 10px;
-    background: #f44336;
+    background-color: #1E90FF;
     color: #fff;
     border: none;
     border-radius: 5px;
@@ -74,5 +49,31 @@ header h1 {
 }
 
 .regenerate-btn:hover {
-    background: #d32f2f;
+    background-color: #4682B4;
+}
+
+#loadingIndicator {
+    display: none;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#printButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #32CD32;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#printButton:hover {
+    background-color: #228B22;
 }
