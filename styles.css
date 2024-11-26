@@ -1,125 +1,48 @@
-/* Reset de márgenes y paddings */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #4facfe, #00f2fe); /* Fondo gradiente */
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
 }
 
-/* Contenedor para el formulario de inicio */
-.container {
-    background: rgba(255, 255, 255, 0.9);
+.exam-container {
+    width: 80%;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
     border-radius: 10px;
-    padding: 20px;
-    width: 100%;
-    max-width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilo para los títulos */
-h1 {
-    font-size: 2em;
+header, section, footer {
     margin-bottom: 20px;
+}
+
+h1, h2 {
+    text-align: center;
     color: #333;
 }
 
-/* Estilo para los formularios */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="email"],
-select,
-button {
+.question-card {
+    border: 1px solid #ddd;
+    margin: 10px 0;
     padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
     border-radius: 5px;
-    width: 100%;
+    background: #f9f9f9;
 }
 
 button {
-    background-color: #007bff;
-    color: white;
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 16px;
     border: none;
+    background: #007bff;
+    color: white;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    border-radius: 5px;
 }
 
 button:hover {
-    background-color: #0056b3;
-}
-
-/* Barra lateral para la pantalla del dashboard */
-.sidebar {
-    width: 200px;
-    background-color: #333;
-    color: white;
-    height: 100vh;
-    padding: 20px;
-    position: fixed;
-    top: 0;
-    left: 0;
-}
-
-.sidebar h2 {
-    text-align: center;
-    font-size: 1.5em;
-    margin-bottom: 20px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-}
-
-.sidebar ul li {
-    margin: 15px 0;
-}
-
-.sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1.1em;
-}
-
-.sidebar ul li a:hover {
-    text-decoration: underline;
-}
-
-/* Contenedor principal del dashboard */
-.main-content {
-    margin-left: 220px;
-    padding: 20px;
-    width: calc(100% - 220px);
-}
-
-.main-content h1 {
-    font-size: 1.8em;
-    margin-bottom: 20px;
-}
-
-.main-content .container {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #0056b3;
 }
