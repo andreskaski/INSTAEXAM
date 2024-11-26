@@ -1,132 +1,192 @@
-/* General Styles */
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
-    background-color: #e3f2fd; /* Azul claro agradable */
-    color: #333; /* Texto legible */
     margin: 0;
     padding: 0;
+    background: linear-gradient(135deg, #007bff, #6c757d);
+    color: #fff;
 }
 
-.exam-container {
-    max-width: 80%; /* Ocupa el 80% del ancho de la pantalla */
-    margin: 20px auto; /* Centrado vertical y horizontal */
+/* Contenedor central */
+.container {
+    max-width: 800px;
+    margin: 50px auto;
     padding: 20px;
-    background-color: #ffffff; /* Fondo blanco para claridad */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background: #fff;
     border-radius: 10px;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Header Styles */
-header {
+/* Títulos */
+h1, h2 {
     text-align: center;
+    color: #007bff;
+}
+
+h1 {
     margin-bottom: 20px;
+    font-size: 2.5em;
 }
 
-header h1 {
-    font-size: 2em;
-    margin: 0;
-    color: #0d47a1; /* Azul oscuro */
+h2 {
+    margin-bottom: 15px;
 }
 
-header p {
-    font-size: 1.2em;
-    margin: 5px 0;
-}
-
-/* Instructions */
-.instructions {
-    background-color: #bbdefb; /* Azul claro */
-    padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-
-.instructions h2 {
-    margin: 0;
-    color: #0d47a1;
-}
-
-.instructions p {
-    margin: 5px 0;
-}
-
-/* Questions Section */
-.questions {
+/* Formulario en index.html */
+form {
     display: flex;
     flex-direction: column;
-    gap: 15px; /* Espaciado entre preguntas */
+    gap: 15px;
 }
 
-.question {
-    background-color: #f5f5f5; /* Fondo claro para destacar */
-    padding: 15px;
+form label {
+    font-weight: bold;
+}
+
+form input, form select, form button {
+    padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
-}
-
-.question h3 {
-    margin: 0 0 10px;
-    font-size: 1.2em;
-    color: #0d47a1;
-}
-
-.question p {
-    margin: 0 0 10px;
-}
-
-/* Option List */
-.question ul {
-    list-style-type: lower-alpha; /* a), b), c) */
-    margin: 0;
-    padding-left: 20px;
-}
-
-.question li {
-    margin-bottom: 5px;
-}
-
-/* Regenerate Button */
-button {
-    background-color: #0d47a1;
-    color: #ffffff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
     font-size: 1em;
 }
 
-button:hover {
-    background-color: #1565c0; /* Azul más claro */
+form button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-/* Footer Buttons */
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Dashboard */
+.dashboard {
+    text-align: center;
+}
+
+.dashboard button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.dashboard button:hover {
+    background: #0056b3;
+}
+
+/* Página del examen */
+.exam-container {
+    max-width: 90%;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.exam-container h1 {
+    text-align: center;
+    font-size: 2em;
+    color: #007bff;
+}
+
+.exam-container p {
+    margin: 10px 0;
+}
+
+/* Preguntas */
+.question {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+}
+
+.question h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.question ul {
+    list-style: lower-alpha;
+    padding-left: 20px;
+}
+
+.question ul li {
+    margin: 5px 0;
+}
+
+.question button {
+    margin-top: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.question button:hover {
+    background-color: #a71d2a;
+}
+
+/* Botones */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
 footer {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 30px;
 }
 
-footer button {
-    margin: 5px;
-}
-
-/* Responsive Design */
-@media print {
-    body {
-        background-color: #ffffff; /* Elimina el color de fondo para impresión */
-    }
-    .exam-container {
-        box-shadow: none; /* Sin sombra al imprimir */
-        border: none;
-    }
-    button {
-        display: none; /* Oculta botones al imprimir */
-    }
-}
-
+/* Media Queries */
 @media (max-width: 768px) {
     .exam-container {
-        max-width: 95%; /* Ajusta el ancho en pantallas pequeñas */
         padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+
+    button {
+        display: none;
+    }
+
+    .exam-container {
+        border: none;
+        box-shadow: none;
     }
 }
