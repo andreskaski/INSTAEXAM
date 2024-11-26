@@ -7,21 +7,99 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Indicador de carga -->
     <div id="loadingIndicator" class="loading">
         <p>Generando el examen, por favor espera...</p>
     </div>
+
+    <!-- Contenedor del examen -->
     <div class="exam-container" id="examContainer" style="display: none;">
         <header class="exam-header">
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
         </header>
-        <section id="questionsContainer"></section>
-        <footer>
+
+        <!-- Contenedor de preguntas -->
+        <section id="questionsContainer">
+            <!-- Las preguntas generadas dinámicamente aparecerán aquí -->
+        </section>
+
+        <footer class="exam-footer">
+            <!-- Botón para imprimir el examen -->
             <button id="printButton">Imprimir Examen</button>
         </footer>
     </div>
-    <script src="scripts.js"></script>
+
+    <!-- Scripts -->
+    <script>
+        // Simulación de datos para prueba (puedes eliminar esto en producción)
+        const questionsData = [
+            {
+                id: 1,
+                enunciado: "¿Cuál es la capital de Francia?",
+                opciones: ["Madrid", "Berlín", "París", "Lisboa"],
+                correcta: 2
+            },
+            {
+                id: 2,
+                enunciado: "¿Cuál es el resultado de 5 + 3?",
+                opciones: ["5", "8", "10", "12"],
+                correcta: 1
+            }
+        ];
+
+        // Referencias a elementos
+        const loadingIndicator = document.getElementById("loadingIndicator");
+        const examContainer = document.getElementById("examContainer");
+        const questionsContainer = document.getElementById("questionsContainer");
+        const printButton = document.getElementById("printButton");
+
+        // Función para cargar preguntas
+        function loadExam(questions) {
+            questionsContainer.innerHTML = ""; // Limpia el contenedor
+            questions.forEach(question => {
+                // Crear el contenedor de cada pregunta
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                questionDiv.innerHTML = `
+                    <p><strong>Pregunta ${question.id}:</strong> ${question.enunciado}</p>
+                    <ul>
+                        ${question.opciones.map((opcion, index) => `
+                            <li>${index + 1}. ${opcion}</li>
+                        `).join("")}
+                    </ul>
+                    <button class="regenerateButton" onclick="regenerateQuestion(${question.id})">
+                        Regenerar esta pregunta
+                    </button>
+                `;
+                questionsContainer.appendChild(questionDiv);
+            });
+        }
+
+        // Función para regenerar una pregunta (simulación)
+        function regenerateQuestion(questionId) {
+            alert(`Pregunta ${questionId} regenerada (función simulada).`);
+            // Aquí puedes implementar la lógica de regenerar la pregunta
+        }
+
+        // Función para imprimir el examen
+        function printExam() {
+            window.print();
+        }
+
+        // Inicialización
+        document.addEventListener("DOMContentLoaded", () => {
+            // Simula la carga de datos (puedes sustituir esto por tu lógica real)
+            setTimeout(() => {
+                loadingIndicator.style.display = "none"; // Oculta el indicador de carga
+                examContainer.style.display = "block"; // Muestra el examen
+                loadExam(questionsData); // Carga las preguntas
+            }, 2000);
+
+            // Asocia el evento de impresión
+            printButton.addEventListener("click", printExam);
+        });
+    </script>
 </body>
 </html>
-
