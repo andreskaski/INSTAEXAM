@@ -38,12 +38,13 @@
             const examCurso = document.getElementById("examCurso");
             const examTema = document.getElementById("examTema");
 
+            // Cargar datos del examen desde localStorage
             const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
             const curso = localStorage.getItem("examenCurso");
             const tema = localStorage.getItem("examenTema");
 
-            examCurso.textContent = curso;
-            examTema.textContent = tema;
+            if (curso) examCurso.textContent = curso;
+            if (tema) examTema.textContent = tema;
 
             function renderQuestions() {
                 preguntasContainer.innerHTML = ""; // Limpia las preguntas anteriores
@@ -59,12 +60,13 @@
                     questionText.textContent = pregunta.pregunta;
 
                     const regenerateButton = document.createElement("button");
-                    regenerateButton.textContent = "Regenerar";
+                    regenerateButton.textContent = "Regenerar pregunta";
+                    regenerateButton.classList.add("regenerate-btn");
                     regenerateButton.addEventListener("click", async () => {
                         const newQuestion = await regenerateQuestion(index);
                         if (newQuestion) {
-                            preguntas[index] = newQuestion;
-                            renderQuestions();
+                            preguntas[index] = newQuestion.pregunta; // Reemplaza la pregunta en el array
+                            renderQuestions(); // Vuelve a renderizar
                         }
                     });
 
@@ -74,7 +76,7 @@
 
                     if (pregunta.opciones) {
                         const optionsList = document.createElement("ul");
-                        pregunta.opciones.forEach(opcion => {
+                        pregunta.opciones.forEach((opcion) => {
                             const optionItem = document.createElement("li");
                             optionItem.textContent = opcion;
                             optionsList.appendChild(optionItem);
@@ -96,10 +98,12 @@
                         body: JSON.stringify({
                             index,
                             curso,
-                            tema
+                            tema,
                         }),
                     });
-                    return await response.json();
+
+                    const data = await response.json();
+                    return data; // Devuelve la nueva pregunta generada
                 } catch (error) {
                     console.error("Error al regenerar la pregunta:", error);
                 }
@@ -107,7 +111,7 @@
 
             renderQuestions();
 
-            // Botón de imprimir
+            // Botón para imprimir
             const printButton = document.getElementById("printButton");
             printButton.addEventListener("click", () => window.print());
         });
