@@ -6,69 +6,91 @@
     <title>Examen Generado</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom, #1E90FF, #87CEFA);
-            font-family: Arial, sans-serif;
+            color: #333;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 20px;
+            min-height: 100vh;
         }
         .exam-container {
-            background: white;
-            padding: 20px;
-            width: 100%;
-            max-width: 800px;
+            background: #fff;
+            padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            max-width: 800px;
         }
         .question {
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
-        button {
-            margin: 10px 0;
+        .question button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #1E90FF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button#printButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #32CD32;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="loadingIndicator">Cargando...</div>
-    <div class="exam-container" id="examContainer" style="display: none;">
+    <div class="exam-container">
         <h1>Examen Generado</h1>
         <p><strong>Curso:</strong> <span id="examCurso"></span></p>
         <p><strong>Tema:</strong> <span id="examTema"></span></p>
         <div id="questionsContainer"></div>
-        <button onclick="window.print()">Imprimir Examen</button>
+        <button id="printButton">Imprimir Examen</button>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const loadingIndicator = document.getElementById("loadingIndicator");
-            const examContainer = document.getElementById("examContainer");
+        document.addEventListener("DOMContentLoaded", () => {
+            const examData = JSON.parse(localStorage.getItem("examenPreguntas")) || {};
+            const { curso, tema, preguntas } = examData;
+
+            document.getElementById("examCurso").textContent = curso || "Desconocido";
+            document.getElementById("examTema").textContent = tema || "Desconocido";
+
             const questionsContainer = document.getElementById("questionsContainer");
 
-            loadingIndicator.style.display = "block";
+            preguntas.forEach((pregunta, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
 
-            const response = await fetch('/generar_examen', { method: 'POST' });
-            const examData = await response.json();
+                const questionText = document.createElement("p");
+                questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
+                questionDiv.appendChild(questionText);
 
-            loadingIndicator.style.display = "none";
-            examContainer.style.display = "block";
-
-            examData.preguntas.forEach((pregunta, i) => {
-                const div = document.createElement("div");
-                div.className = "question";
-                div.innerHTML = `<p>${i + 1}. ${pregunta.pregunta}</p>`;
                 if (pregunta.opciones) {
-                    const ul = document.createElement("ul");
                     pregunta.opciones.forEach(opcion => {
-                        const li = document.createElement("li");
-                        li.textContent = opcion;
-                        ul.appendChild(li);
+                        const optionParagraph = document.createElement("p");
+                        optionParagraph.textContent = opcion;
+                        questionDiv.appendChild(optionParagraph);
                     });
-                    div.appendChild(ul);
                 }
-                questionsContainer.appendChild(div);
+
+                const regenerateButton = document.createElement("button");
+                regenerateButton.textContent = "Regenerar";
+                regenerateButton.addEventListener("click", () => alert("Regenerar pregunta no implementado aún"));
+                questionDiv.appendChild(regenerateButton);
+
+                questionsContainer.appendChild(questionDiv);
             });
+
+            document.getElementById("printButton").addEventListener("click", () => window.print());
         });
     </script>
 </body>
