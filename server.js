@@ -10,25 +10,23 @@ app.use(express.json());
 // Sirve archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Ruta para la página de inicio
+// Ruta para la página de inicio (registro/login)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Ruta para el dashboard
+// Ruta para el dashboard (panel de control)
 app.post('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
 // Ruta para generar el examen
 app.post('/generar_examen', async (req, res) => {
-    const { curso, tema, dificultad } = req.body;
+    const { curso, tema } = req.body;
 
-    const prompt = `
-    Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}.
-    Máximo 2 preguntas de opción múltiple. Las demás deben ser preguntas abiertas o ejercicios prácticos.
-    Devuelve las preguntas en formato JSON como un array de objetos con las claves: 'tipo' (opción múltiple, pregunta abierta, ejercicio práctico), 'pregunta', y opcionalmente 'opciones' (solo para preguntas de opción múltiple).
-    `;
+    const prompt = `Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso}. 
+    Deben incluir máximo 2 preguntas de opción múltiple, y el resto deben ser preguntas abiertas o ejercicios prácticos. 
+    Devuelve las preguntas en formato JSON como un array de objetos con las claves: 'tipo', 'pregunta', y 'opciones' (solo para opción múltiple).`;
 
     try {
         const response = await axios.post(
@@ -62,11 +60,8 @@ app.post('/generar_examen', async (req, res) => {
 app.post('/regenerate_question', async (req, res) => {
     const { index, curso, tema } = req.body;
 
-    const prompt = `
-    Genera una nueva pregunta sobre el tema '${tema}' para estudiantes de ${curso}.
-    La pregunta puede ser abierta, práctica o de opción múltiple (máximo 2 en total para todo el examen).
-    Devuelve la pregunta en formato JSON con las claves: 'tipo', 'pregunta', y opcionalmente 'opciones'.
-    `;
+    const prompt = `Genera una nueva pregunta sobre el tema '${tema}' para estudiantes de ${curso}. 
+    Devuelve la pregunta en formato JSON con las claves: 'tipo', 'pregunta', y opcionalmente 'opciones' (si es opción múltiple).`;
 
     try {
         const response = await axios.post(
@@ -99,5 +94,3 @@ app.post('/regenerate_question', async (req, res) => {
 app.listen(PORT, () => {
     console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
 });
-
-
