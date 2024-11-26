@@ -25,9 +25,8 @@ app.post('/generar_examen', async (req, res) => {
     const { curso, tema, dificultad } = req.body;
 
     const prompt = `Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. 
-    Limita a 2 preguntas de opción múltiple como máximo y genera preguntas abiertas y prácticas para el resto.
-    Devuelve un array JSON con objetos que tengan las claves: 
-    'tipo' (Opción múltiple, Pregunta abierta, Ejercicio práctico), 'pregunta', y opcionalmente 'opciones' (para opción múltiple).`;
+    Limita a un máximo de 2 preguntas de opción múltiple, y utiliza preguntas abiertas y ejercicios prácticos para el resto.
+    Devuelve un array JSON con objetos que tengan las claves: 'tipo', 'pregunta', y opcionalmente 'opciones' (solo para opción múltiple).`;
 
     try {
         const response = await axios.post(
@@ -48,7 +47,6 @@ app.post('/generar_examen', async (req, res) => {
             res.json({ curso, tema, preguntas: preguntasGeneradas });
         } catch (jsonError) {
             console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
-            console.error('Respuesta de OpenAI:', rawResponse);
             res.status(500).send('Error al generar el examen. La respuesta no es válida.');
         }
     } catch (error) {
@@ -83,7 +81,6 @@ app.post('/regenerate_question', async (req, res) => {
             res.json({ pregunta: nuevaPregunta });
         } catch (jsonError) {
             console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
-            console.error('Respuesta de OpenAI:', rawResponse);
             res.status(500).send('Error al regenerar la pregunta. La respuesta no es válida.');
         }
     } catch (error) {
