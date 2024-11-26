@@ -8,113 +8,16 @@
 </head>
 <body>
     <div class="exam-container">
-        <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
         </header>
-
-        <!-- Instrucciones -->
-        <section class="instructions">
-            <h2>Instrucciones</h2>
-            <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
-        </section>
-
-        <!-- Preguntas -->
-        <section class="questions" id="preguntas">
-            <!-- Aquí se inyectarán dinámicamente las preguntas -->
-        </section>
-
-        <!-- Botones -->
+        <section id="questions"></section>
         <footer>
-            <button id="printButton">Imprimir Examen</button>
+            <button id="printButton">Imprimir</button>
         </footer>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const preguntasContainer = document.getElementById("preguntas");
-            const examCurso = document.getElementById("examCurso");
-            const examTema = document.getElementById("examTema");
-
-            // Cargar datos del examen desde localStorage
-            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
-            const curso = localStorage.getItem("examenCurso");
-            const tema = localStorage.getItem("examenTema");
-
-            if (curso) examCurso.textContent = curso;
-            if (tema) examTema.textContent = tema;
-
-            function renderQuestions() {
-                preguntasContainer.innerHTML = ""; // Limpia las preguntas anteriores
-
-                preguntas.forEach((pregunta, index) => {
-                    const questionCard = document.createElement("div");
-                    questionCard.className = "question-card";
-
-                    const questionTitle = document.createElement("h3");
-                    questionTitle.textContent = `Pregunta ${index + 1}:`;
-
-                    const questionText = document.createElement("p");
-                    questionText.textContent = pregunta.pregunta;
-
-                    const regenerateButton = document.createElement("button");
-                    regenerateButton.textContent = "Regenerar pregunta";
-                    regenerateButton.classList.add("regenerate-btn");
-                    regenerateButton.addEventListener("click", async () => {
-                        const newQuestion = await regenerateQuestion(index);
-                        if (newQuestion) {
-                            preguntas[index] = newQuestion.pregunta; // Reemplaza la pregunta en el array
-                            renderQuestions(); // Vuelve a renderizar
-                        }
-                    });
-
-                    questionCard.appendChild(questionTitle);
-                    questionCard.appendChild(questionText);
-                    questionCard.appendChild(regenerateButton);
-
-                    if (pregunta.opciones) {
-                        const optionsList = document.createElement("ul");
-                        pregunta.opciones.forEach((opcion) => {
-                            const optionItem = document.createElement("li");
-                            optionItem.textContent = opcion;
-                            optionsList.appendChild(optionItem);
-                        });
-                        questionCard.appendChild(optionsList);
-                    }
-
-                    preguntasContainer.appendChild(questionCard);
-                });
-            }
-
-            async function regenerateQuestion(index) {
-                try {
-                    const response = await fetch("/regenerate_question", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            index,
-                            curso,
-                            tema,
-                        }),
-                    });
-
-                    const data = await response.json();
-                    return data; // Devuelve la nueva pregunta generada
-                } catch (error) {
-                    console.error("Error al regenerar la pregunta:", error);
-                }
-            }
-
-            renderQuestions();
-
-            // Botón para imprimir
-            const printButton = document.getElementById("printButton");
-            printButton.addEventListener("click", () => window.print());
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
