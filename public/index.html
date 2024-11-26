@@ -51,13 +51,14 @@
 <body>
     <div class="container">
         <h1>Generador de Exámenes</h1>
-        <form>
-            <input type="email" placeholder="Correo Electrónico" required>
-            <input type="text" placeholder="Nombre" required>
-            <input type="text" placeholder="Centro Educativo" required>
-            <input type="text" placeholder="Etapa Escolar" required>
-            <input type="text" placeholder="País" required>
-            <input type="text" placeholder="Ciudad" required>
+        <!-- El formulario redirige al dashboard -->
+        <form action="/dashboard" method="POST">
+            <input type="email" name="email" placeholder="Correo Electrónico" required>
+            <input type="text" name="name" placeholder="Nombre" required>
+            <input type="text" name="center" placeholder="Centro Educativo" required>
+            <input type="text" name="grade" placeholder="Etapa Escolar" required>
+            <input type="text" name="country" placeholder="País" required>
+            <input type="text" name="city" placeholder="Ciudad" required>
             <button type="submit">Entrar</button>
         </form>
     </div>
