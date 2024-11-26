@@ -1,62 +1,62 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const loadingIndicator = document.getElementById("loadingIndicator");
-    const examContainer = document.getElementById("examContainer");
+    const questionsContainer = document.getElementById("questions");
+    const examCurso = document.getElementById("examCurso");
+    const examTema = document.getElementById("examTema");
 
-    // Cargar los datos del examen desde el servidor
-    fetch("/generar_examen", { method: "GET" })
-        .then((response) => response.json())
-        .then((exam) => {
-            loadingIndicator.style.display = "none";
-            examContainer.style.display = "block";
+    const examData = JSON.parse(localStorage.getItem("examData"));
+    if (examData) {
+        examCurso.textContent = examData.curso;
+        examTema.textContent = examData.tema;
 
-            // Rellenar datos del examen
-            document.getElementById("examCurso").textContent = exam.curso;
-            document.getElementById("examTema").textContent = exam.tema;
+        examData.preguntas.forEach((pregunta, index) => {
+            const questionDiv = document.createElement("div");
+            questionDiv.className = "question";
 
-            // Renderizar las preguntas
-            const questionsSection = document.querySelector(".questions");
-            questionsSection.innerHTML = ""; // Limpiar contenido previo
+            const questionTitle = document.createElement("h3");
+            questionTitle.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
 
-            exam.preguntas.forEach((pregunta, index) => {
-                const questionCard = document.createElement("div");
-                questionCard.classList.add("question-card");
+            const questionText = document.createElement("p");
+            questionText.textContent = pregunta.pregunta;
 
-                const questionTitle = document.createElement("h3");
-                questionTitle.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
-                questionCard.appendChild(questionTitle);
-
-                const questionText = document.createElement("p");
-                questionText.textContent = pregunta.pregunta;
-                questionCard.appendChild(questionText);
-
-                if (pregunta.opciones) {
-                    const optionsList = document.createElement("ul");
-                    pregunta.opciones.forEach((opcion) => {
-                        const optionItem = document.createElement("li");
-                        optionItem.textContent = opcion;
-                        optionsList.appendChild(optionItem);
-                    });
-                    questionCard.appendChild(optionsList);
+            const regenerateButton = document.createElement("button");
+            regenerateButton.textContent = "Regenerar";
+            regenerateButton.onclick = async () => {
+                const newQuestion = await regenerateQuestion(index);
+                if (newQuestion) {
+                    examData.preguntas[index] = newQuestion;
+                    renderQuestions();
                 }
+            };
 
-                questionsSection.appendChild(questionCard);
-            });
-        })
-        .catch((error) => {
-            console.error("Error al cargar el examen:", error);
+            questionDiv.appendChild(questionTitle);
+            questionDiv.appendChild(questionText);
+            questionDiv.appendChild(regenerateButton);
+
+            if (pregunta.opciones) {
+                const optionsList = document.createElement("ul");
+                pregunta.opciones.forEach(option => {
+                    const optionItem = document.createElement("li");
+                    optionItem.textContent = option;
+                    optionsList.appendChild(optionItem);
+                });
+                questionDiv.appendChild(optionsList);
+            }
+
+            questionsContainer.appendChild(questionDiv);
         });
-
-    // Botón para imprimir
-    const printButton = document.getElementById("printButton");
-    if (printButton) {
-        printButton.addEventListener("click", () => window.print());
     }
 
-    // Botón para volver al dashboard
-    const generateAgain = document.getElementById("generateAgain");
-    if (generateAgain) {
-        generateAgain.addEventListener("click", () => {
-            window.location.href = "/dashboard";
+    document.getElementById("printButton").addEventListener("click", () => {
+        window.print();
+    });
+
+    async function regenerateQuestion(index) {
+        const response = await fetch('/regenerate_question', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ index, curso: examData.curso, tema: examData.tema })
         });
+        const data = await response.json();
+        return data.pregunta;
     }
 });
