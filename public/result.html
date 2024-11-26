@@ -8,17 +8,20 @@
 </head>
 <body>
     <div id="loadingIndicator" class="loading">
-        Generando el examen, por favor espera...
+        <p>Generando el examen, por favor espera...</p>
     </div>
     <div class="exam-container" id="examContainer" style="display: none;">
-        <div class="exam-header">
+        <header class="exam-header">
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
-        </div>
-        <div id="questionsContainer"></div>
-        <button id="printButton">Imprimir Examen</button>
+        </header>
+        <section id="questionsContainer"></section>
+        <footer>
+            <button id="printButton">Imprimir Examen</button>
+        </footer>
     </div>
     <script src="scripts.js"></script>
 </body>
 </html>
+
