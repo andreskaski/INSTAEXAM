@@ -2,53 +2,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadingIndicator = document.getElementById("loadingIndicator");
     const examContainer = document.getElementById("examContainer");
 
-    // Fetch data del servidor al cargar la página
-    fetch("/generar_examen", { method: "POST" })
+    // Cargar los datos del examen desde el servidor
+    fetch("/generar_examen", { method: "GET" })
         .then((response) => response.json())
         .then((exam) => {
-            loadingIndicator.style.display = "none"; // Oculta el indicador de carga
-            examContainer.style.display = "block"; // Muestra el contenedor
+            loadingIndicator.style.display = "none";
+            examContainer.style.display = "block";
 
-            // Rellena los datos del encabezado
+            // Rellenar datos del examen
             document.getElementById("examCurso").textContent = exam.curso;
             document.getElementById("examTema").textContent = exam.tema;
 
-            // Renderiza las preguntas dinámicamente
+            // Renderizar las preguntas
             const questionsSection = document.querySelector(".questions");
-            questionsSection.innerHTML = ""; // Limpia cualquier contenido previo
+            questionsSection.innerHTML = ""; // Limpiar contenido previo
 
             exam.preguntas.forEach((pregunta, index) => {
-                const questionContainer = document.createElement("div");
-                questionContainer.className = "question-container";
+                const questionCard = document.createElement("div");
+                questionCard.classList.add("question-card");
 
-                // Número y texto de la pregunta
-                const questionNumber = document.createElement("h3");
-                questionNumber.textContent = `Pregunta ${index + 1}:`;
+                const questionTitle = document.createElement("h3");
+                questionTitle.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
+                questionCard.appendChild(questionTitle);
+
                 const questionText = document.createElement("p");
                 questionText.textContent = pregunta.pregunta;
+                questionCard.appendChild(questionText);
 
-                questionContainer.appendChild(questionNumber);
-                questionContainer.appendChild(questionText);
-
-                // Opciones para preguntas de opción múltiple
                 if (pregunta.opciones) {
                     const optionsList = document.createElement("ul");
-                    pregunta.opciones.forEach((opcion, idx) => {
+                    pregunta.opciones.forEach((opcion) => {
                         const optionItem = document.createElement("li");
-                        optionItem.textContent = `${String.fromCharCode(97 + idx)}) ${opcion}`;
+                        optionItem.textContent = opcion;
                         optionsList.appendChild(optionItem);
                     });
-                    questionContainer.appendChild(optionsList);
+                    questionCard.appendChild(optionsList);
                 }
 
-                questionsSection.appendChild(questionContainer);
+                questionsSection.appendChild(questionCard);
             });
         })
         .catch((error) => {
             console.error("Error al cargar el examen:", error);
         });
 
-    // Botón de imprimir
+    // Botón para imprimir
     const printButton = document.getElementById("printButton");
     if (printButton) {
         printButton.addEventListener("click", () => window.print());
