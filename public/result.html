@@ -4,152 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Generado</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to bottom, #1E90FF, #87CEFA);
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .exam-container {
-            background: #fff;
-            width: 80%;
-            max-width: 900px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .exam-title {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .question {
-            margin: 20px 0;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .question:last-child {
-            border-bottom: none;
-        }
-        .question button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #1E90FF;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .question button:hover {
-            background-color: #4682B4;
-        }
-        #printButton {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #32CD32;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        #printButton:hover {
-            background-color: #228B22;
-        }
-        #loadingIndicator {
-            display: none;
-            text-align: center;
-            font-size: 18px;
-            color: #555;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="loadingIndicator">Generando el examen, por favor espera...</div>
-    <div class="exam-container" id="examContainer" style="display: none;">
-        <div class="exam-title">
+    <!-- Spinner de carga -->
+    <div id="loadingIndicator" class="spinner" style="display: none;">Generando el examen, por favor espera...</div>
+    
+    <!-- Contenedor del examen -->
+    <div id="examContainer" class="exam-container" style="display: none;">
+        <div class="exam-header">
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
         </div>
-        <div id="questionsContainer"></div>
-        <button id="printButton">Imprimir Examen</button>
+        <div id="questionsContainer" class="questions"></div>
+        <button id="printButton" class="print-btn">Imprimir Examen</button>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const loadingIndicator = document.getElementById("loadingIndicator");
-            const examContainer = document.getElementById("examContainer");
-            const questionsContainer = document.getElementById("questionsContainer");
-            const examCurso = document.getElementById("examCurso");
-            const examTema = document.getElementById("examTema");
-            const printButton = document.getElementById("printButton");
 
-            const examData = JSON.parse(localStorage.getItem("examenPreguntas")) || {};
-            const { curso, tema, preguntas } = examData;
-
-            if (curso && tema && preguntas) {
-                examCurso.textContent = curso;
-                examTema.textContent = tema;
-
-                preguntas.forEach((pregunta, index) => {
-                    const questionDiv = document.createElement("div");
-                    questionDiv.classList.add("question");
-
-                    const questionText = document.createElement("p");
-                    questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
-
-                    const regenerateButton = document.createElement("button");
-                    regenerateButton.textContent = "Regenerar";
-                    regenerateButton.addEventListener("click", async () => {
-                        const nuevaPregunta = await regenerateQuestion(index);
-                        if (nuevaPregunta) {
-                            preguntas[index] = nuevaPregunta;
-                            renderQuestions();
-                        }
-                    });
-
-                    questionDiv.appendChild(questionText);
-
-                    if (pregunta.opciones) {
-                        pregunta.opciones.forEach((opcion, i) => {
-                            const optionText = document.createElement("p");
-                            optionText.textContent = `${String.fromCharCode(97 + i)}) ${opcion}`;
-                            questionDiv.appendChild(optionText);
-                        });
-                    }
-
-                    questionDiv.appendChild(regenerateButton);
-                    questionsContainer.appendChild(questionDiv);
-                });
-
-                loadingIndicator.style.display = "none";
-                examContainer.style.display = "block";
-            } else {
-                alert("No se encontraron datos del examen.");
-            }
-
-            async function regenerateQuestion(index) {
-                try {
-                    const response = await fetch("/regenerate_question", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ index, curso, tema }),
-                    });
-                    const data = await response.json();
-                    return data.pregunta;
-                } catch (error) {
-                    console.error("Error al regenerar la pregunta:", error);
-                }
-            }
-
-            printButton.addEventListener("click", () => window.print());
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
+
