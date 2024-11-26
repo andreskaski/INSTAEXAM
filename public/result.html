@@ -7,19 +7,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
+    <div class="exam-container">
+        <!-- Encabezado -->
         <header>
-            <h1 id="examTitle">Examen Generado</h1>
+            <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
         </header>
 
-        <section id="questionsContainer">
-            <!-- Preguntas generadas se insertarán aquí -->
+        <!-- Instrucciones -->
+        <section class="instructions">
+            <h2>Instrucciones</h2>
+            <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen. Puedes regenerar preguntas si lo deseas.</p>
         </section>
 
+        <!-- Preguntas -->
+        <section id="preguntas" class="questions"></section>
+
+        <!-- Botones -->
         <footer>
-            <button id="printButton" class="button">Imprimir Examen</button>
+            <button id="printButton" class="action-btn">Imprimir Examen</button>
         </footer>
     </div>
 
