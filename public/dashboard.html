@@ -3,58 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Exámenes - Panel</title>
+    <title>Panel de Control</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <aside class="sidebar">
-        <h2>Menú</h2>
-        <ul>
-            <li><a href="#generador">Generador de Exámenes</a></li>
-            <li><a href="#perfil">Perfil</a></li>
-            <li><a href="#ayuda">Ayuda</a></li>
-            <li><a href="#logout" onclick="logout()">Cerrar sesión</a></li>
-        </ul>
-    </aside>
+    <div class="container">
+        <h1>Bienvenido a tu Panel</h1>
+        <form action="/generar_examen" method="post" class="form-card">
+            <label for="grade">Curso Académico:</label>
+            <input type="text" id="grade" name="curso" required>
 
-    <div class="main-content">
-        <h1>Bienvenido a tu panel</h1>
-        <section id="generador">
-            <h2>Generar Examen</h2>
-            <div class="container">
-                <!-- Formulario con indicador de carga -->
-                <form id="examForm" action="/generar_examen" method="POST">
-                    <label for="curso">Curso Académico:</label>
-                    <input type="text" id="curso" name="curso" required>
+            <label for="subject">Tema:</label>
+            <input type="text" id="subject" name="tema" required>
 
-                    <label for="tema">Tema:</label>
-                    <input type="text" id="tema" name="tema" required>
+            <label for="difficulty">Dificultad:</label>
+            <select id="difficulty" name="dificultad" required>
+                <option value="baja">Baja</option>
+                <option value="media">Media</option>
+                <option value="alta">Alta</option>
+            </select>
 
-                    <label for="dificultad">Dificultad:</label>
-                    <select id="dificultad" name="dificultad">
-                        <option value="baja">Baja</option>
-                        <option value="media">Media</option>
-                        <option value="alta">Alta</option>
-                    </select>
-
-                    <button type="submit">Generar Examen</button>
-                </form>
-
-                <!-- Indicador de carga -->
-                <div id="loadingIndicator" style="display: none; text-align: center; margin-top: 20px;">
-                    <p>Generando el examen, por favor espera...</p>
-                    <div class="spinner"></div>
-                </div>
-            </div>
-        </section>
+            <button type="submit" class="button">Generar Examen</button>
+        </form>
     </div>
-
-    <script>
-        // Agregar manejo del indicador de carga
-        document.getElementById("examForm").addEventListener("submit", function (e) {
-            const loadingIndicator = document.getElementById("loadingIndicator");
-            loadingIndicator.style.display = "block";
-        });
-    </script>
 </body>
 </html>
