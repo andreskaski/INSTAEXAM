@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const examTema = document.getElementById("examTema");
     const printButton = document.getElementById("printButton");
 
-    // Simula la carga del examen desde localStorage (puedes cambiar por la lógica real)
     const examData = JSON.parse(localStorage.getItem("examenPreguntas")) || {};
     const { curso, tema, preguntas } = examData;
 
@@ -18,18 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const questionDiv = document.createElement("div");
             questionDiv.classList.add("question");
 
+            const questionNumber = document.createElement("h2");
+            questionNumber.textContent = `Pregunta ${index + 1}`;
+            questionDiv.appendChild(questionNumber);
+
             const questionText = document.createElement("p");
-            questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
-
-            const regenerateButton = document.createElement("button");
-            regenerateButton.textContent = "Regenerar";
-            regenerateButton.classList.add("regenerate-btn");
-            regenerateButton.addEventListener("click", () => regenerateQuestion(index));
-
+            questionText.textContent = pregunta.pregunta;
             questionDiv.appendChild(questionText);
 
             if (pregunta.opciones) {
                 const optionsContainer = document.createElement("div");
+                optionsContainer.classList.add("options");
                 pregunta.opciones.forEach((opcion, i) => {
                     const optionText = document.createElement("p");
                     optionText.textContent = `${String.fromCharCode(97 + i)}) ${opcion}`;
@@ -37,6 +35,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 questionDiv.appendChild(optionsContainer);
             }
+
+            const regenerateButton = document.createElement("button");
+            regenerateButton.textContent = "Regenerar";
+            regenerateButton.classList.add("regenerate-btn");
+            regenerateButton.addEventListener("click", () => regenerateQuestion(index));
 
             questionDiv.appendChild(regenerateButton);
             questionsContainer.appendChild(questionDiv);
@@ -62,37 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             alert("Hubo un error al regenerar la pregunta. Inténtalo nuevamente.");
         }
-    }
-
-    function renderQuestions() {
-        questionsContainer.innerHTML = ""; // Limpiar preguntas
-        preguntas.forEach((pregunta, index) => {
-            const questionDiv = document.createElement("div");
-            questionDiv.classList.add("question");
-
-            const questionText = document.createElement("p");
-            questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
-
-            const regenerateButton = document.createElement("button");
-            regenerateButton.textContent = "Regenerar";
-            regenerateButton.classList.add("regenerate-btn");
-            regenerateButton.addEventListener("click", () => regenerateQuestion(index));
-
-            questionDiv.appendChild(questionText);
-
-            if (pregunta.opciones) {
-                const optionsContainer = document.createElement("div");
-                pregunta.opciones.forEach((opcion, i) => {
-                    const optionText = document.createElement("p");
-                    optionText.textContent = `${String.fromCharCode(97 + i)}) ${opcion}`;
-                    optionsContainer.appendChild(optionText);
-                });
-                questionDiv.appendChild(optionsContainer);
-            }
-
-            questionDiv.appendChild(regenerateButton);
-            questionsContainer.appendChild(questionDiv);
-        });
     }
 
     printButton.addEventListener("click", () => window.print());
