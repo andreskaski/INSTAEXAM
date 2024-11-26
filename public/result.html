@@ -4,24 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Generado</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .exam-container {
+            width: 80%;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="exam-container">
-        <header>
-            <h1>Examen Generado</h1>
-            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-            <p><strong>Tema:</strong> <span id="examTema"></span></p>
-        </header>
-        <section class="instructions">
-            <h2>Instrucciones</h2>
-            <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
-        </section>
-        <section id="questions"></section>
-        <footer>
-            <button id="printButton">Imprimir</button>
-        </footer>
+        <h1>Examen Generado</h1>
+        <p><strong>Curso:</strong> <span id="examCurso"></span></p>
+        <p><strong>Tema:</strong> <span id="examTema"></span></p>
+        <hr>
+        <div id="preguntas"></div>
+        <button id="printButton">Imprimir Examen</button>
     </div>
-    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const preguntasContainer = document.getElementById("preguntas");
+            const curso = localStorage.getItem("examenCurso");
+            const tema = localStorage.getItem("examenTema");
+            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
+
+            document.getElementById("examCurso").textContent = curso;
+            document.getElementById("examTema").textContent = tema;
+
+            preguntas.forEach((pregunta, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.innerHTML = `
+                    <p><strong>Pregunta ${index + 1}:</strong> ${pregunta.pregunta}</p>
+                    ${pregunta.opciones ? `<ul>${pregunta.opciones.map(op => `<li>${op}</li>`).join('')}</ul>` : ''}
+                    <button onclick="regenerateQuestion(${index})">Regenerar Pregunta</button>
+                `;
+                preguntasContainer.appendChild(questionDiv);
+            });
+
+            document.getElementById("printButton").addEventListener("click", () => window.print());
+
+            window.regenerateQuestion = async (index) => {
+                const response = await fetch('/regenerate_question', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ index, curso, tema })
+                });
+                const data = await response.json();
+                if (data.pregunta) {
+                    preguntas[index] = data.pregunta;
+                    localStorage.setItem("examenPreguntas", JSON.stringify(preguntas));
+                    location.reload();
+                }
+            };
+        });
+    </script>
 </body>
 </html>
