@@ -25,7 +25,9 @@ app.post('/generar_examen', async (req, res) => {
     const { curso, tema, dificultad } = req.body;
 
     const prompt = `Crea un examen con 10 preguntas variadas sobre el tema '${tema}' para estudiantes de ${curso} con dificultad ${dificultad}. 
-    Incluye un máximo de 2 preguntas de opción múltiple, el resto deben ser preguntas abiertas y prácticas. Devuelve las preguntas en formato JSON con las claves: 'tipo', 'pregunta', y 'opciones' (opcional para preguntas de opción múltiple).`;
+    Limita a 2 preguntas de opción múltiple como máximo y genera preguntas abiertas y prácticas para el resto.
+    Devuelve un array JSON con objetos que tengan las claves: 
+    'tipo' (Opción múltiple, Pregunta abierta, Ejercicio práctico), 'pregunta', y opcionalmente 'opciones' (para opción múltiple).`;
 
     try {
         const response = await axios.post(
