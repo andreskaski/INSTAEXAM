@@ -1,88 +1,79 @@
-/* Fondo general */
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
     background: linear-gradient(to bottom, #1E90FF, #87CEFA);
+    color: #333;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-/* Spinner */
-.spinner {
-    text-align: center;
-    font-size: 18px;
-    color: #555;
-    font-weight: bold;
-}
-
-/* Contenedor del examen */
 .exam-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    background: #fff;
+    width: 90%;
+    max-width: 800px;
     padding: 20px;
-    width: 80%;
-    max-width: 900px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Encabezado del examen */
 .exam-header {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.exam-header h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-/* Contenedor de preguntas */
-.questions {
-    margin-top: 20px;
-}
-
-/* Pregunta individual */
 .question {
-    margin-bottom: 20px;
+    margin: 15px 0;
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
 
+.question:last-child {
+    border-bottom: none;
+}
+
 .question p {
-    margin: 0;
+    margin: 5px 0;
 }
 
-.options {
-    margin: 10px 0;
-    padding-left: 20px;
-}
-
-/* Botones */
-button {
+.regenerate-btn {
     margin-top: 10px;
-    padding: 10px 15px;
-    background: #1E90FF;
-    color: white;
+    padding: 5px 10px;
+    background-color: #1E90FF;
+    color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-button:hover {
-    background: #4682B4;
+.regenerate-btn:hover {
+    background-color: #4682B4;
 }
 
-.print-btn {
+#loadingIndicator {
+    display: none;
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#printButton {
     display: block;
     margin: 20px auto;
     padding: 10px 20px;
-    font-size: 16px;
     background-color: #32CD32;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.print-btn:hover {
+#printButton:hover {
     background-color: #228B22;
 }
-
