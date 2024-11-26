@@ -3,35 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Exámenes - Inicio</title>
+    <title>Generador de Exámenes</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Generador de Exámenes</h1>
     <div class="container">
-        <!-- Formulario de inicio de sesión -->
-        <form id="loginForm" action="/dashboard" method="POST">
+        <h1>Generador de Exámenes</h1>
+        <form action="/dashboard" method="post" class="form-card">
             <label for="email">Correo Electrónico:</label>
             <input type="email" id="email" name="email" required>
-
+            
             <label for="name">Nombre:</label>
             <input type="text" id="name" name="name" required>
-
+            
             <label for="school">Centro Educativo:</label>
             <input type="text" id="school" name="school" required>
-
-            <label for="stage">Etapa Escolar:</label>
-            <input type="text" id="stage" name="stage" required>
-
-            <label for="country">País:</label>
-            <input type="text" id="country" name="country" required>
-
-            <label for="city">Ciudad:</label>
-            <input type="text" id="city" name="city" required>
-
-            <button type="submit">Entrar</button>
+            
+            <label for="grade">Etapa Escolar:</label>
+            <input type="text" id="grade" name="grade" required>
+            
+            <button type="submit" class="button">Entrar</button>
         </form>
     </div>
-    <script src="scripts.js"></script>
 </body>
 </html>
