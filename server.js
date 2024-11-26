@@ -10,17 +10,17 @@ app.use(express.json());
 // Sirve archivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Página de inicio
+// Ruta para la página de inicio (registro/login)
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Panel de control
+// Ruta para el dashboard (panel de control)
 app.post('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
 
-// Generar examen
+// Ruta para generar el examen
 app.post('/generar_examen', async (req, res) => {
     const { curso, tema, dificultad } = req.body;
 
@@ -35,7 +35,7 @@ app.post('/generar_examen', async (req, res) => {
                 model: 'gpt-4',
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: 1000,
-                temperature: 0.5,
+                temperature: 0.7,
             },
             { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
         );
@@ -44,23 +44,27 @@ app.post('/generar_examen', async (req, res) => {
 
         try {
             const preguntasGeneradas = JSON.parse(rawResponse);
-            if (!Array.isArray(preguntasGeneradas)) {
-                throw new Error('El JSON generado no contiene un array válido.');
-            }
-
-            res.json({ curso, tema, preguntas: preguntasGeneradas });
+            // Guarda el JSON en el navegador
+            res.send(`
+                <script>
+                    localStorage.setItem("examenPreguntas", JSON.stringify(${JSON.stringify(preguntasGeneradas)}));
+                    localStorage.setItem("examenCurso", "${curso}");
+                    localStorage.setItem("examenTema", "${tema}");
+                    window.location.href = "/result.html";
+                </script>
+            `);
         } catch (jsonError) {
-            console.error('Error al parsear el JSON:', jsonError.message);
+            console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
             console.error('Respuesta de OpenAI:', rawResponse);
-            res.status(500).json({ error: 'Error al generar el examen. Respuesta no válida.' });
+            res.status(500).send('Error al generar el examen. La respuesta no es válida.');
         }
     } catch (error) {
-        console.error('Error en la API de OpenAI:', error.message);
-        res.status(500).json({ error: 'Error al generar el examen.' });
+        console.error('Error al llamar a la API de OpenAI:', error.message);
+        res.status(500).send('Error al generar el examen.');
     }
 });
 
-// Regenerar pregunta
+// Ruta para regenerar una pregunta
 app.post('/regenerate_question', async (req, res) => {
     const { index, curso, tema } = req.body;
 
@@ -74,7 +78,7 @@ app.post('/regenerate_question', async (req, res) => {
                 model: 'gpt-4',
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: 200,
-                temperature: 0.5,
+                temperature: 0.7,
             },
             { headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}` } }
         );
@@ -83,23 +87,18 @@ app.post('/regenerate_question', async (req, res) => {
 
         try {
             const nuevaPregunta = JSON.parse(rawResponse);
-            if (!nuevaPregunta.pregunta || !nuevaPregunta.tipo) {
-                throw new Error('La pregunta generada no contiene las claves necesarias.');
-            }
-
-            res.json({ index, pregunta: nuevaPregunta });
+            res.json({ pregunta: nuevaPregunta });
         } catch (jsonError) {
-            console.error('Error al parsear el JSON:', jsonError.message);
+            console.error('Error al parsear el JSON de OpenAI:', jsonError.message);
             console.error('Respuesta de OpenAI:', rawResponse);
-            res.status(500).json({ error: 'Error al regenerar la pregunta. Respuesta no válida.' });
+            res.status(500).send('Error al regenerar la pregunta. La respuesta no es válida.');
         }
     } catch (error) {
-        console.error('Error en la API de OpenAI:', error.message);
-        res.status(500).json({ error: 'Error al regenerar la pregunta.' });
+        console.error('Error al regenerar la pregunta:', error.message);
+        res.status(500).send('Error al regenerar la pregunta.');
     }
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
 });
