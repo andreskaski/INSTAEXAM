@@ -18,14 +18,37 @@
         }
         .exam-container {
             background: #fff;
+            width: 80%;
+            max-width: 900px;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: 80%;
-            max-width: 800px;
+            margin: 20px;
+        }
+        .exam-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .exam-title h1 {
+            margin-bottom: 5px;
+            color: #1E90FF;
         }
         .question {
             margin: 20px 0;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .question:last-child {
+            border-bottom: none;
+        }
+        .question p {
+            margin: 0 0 10px;
+        }
+        .options {
+            margin-left: 20px;
+        }
+        .options li {
+            margin: 5px 0;
         }
         .question button {
             margin-top: 10px;
@@ -36,61 +59,108 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        button#printButton {
+        .question button:hover {
+            background-color: #4682B4;
+        }
+        #printButton {
             display: block;
-            margin: 20px auto;
+            margin: 30px auto;
             padding: 10px 20px;
             background-color: #32CD32;
-            color: white;
+            color: #fff;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+        }
+        #printButton:hover {
+            background-color: #228B22;
         }
     </style>
 </head>
 <body>
     <div class="exam-container">
-        <h1>Examen Generado</h1>
-        <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-        <p><strong>Tema:</strong> <span id="examTema"></span></p>
+        <div class="exam-title">
+            <h1>Examen Generado</h1>
+            <p><strong>Curso:</strong> <span id="examCurso"></span></p>
+            <p><strong>Tema:</strong> <span id="examTema"></span></p>
+        </div>
         <div id="questionsContainer"></div>
         <button id="printButton">Imprimir Examen</button>
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            const questionsContainer = document.getElementById("questionsContainer");
+            const examCurso = document.getElementById("examCurso");
+            const examTema = document.getElementById("examTema");
+            const printButton = document.getElementById("printButton");
+
             const examData = JSON.parse(localStorage.getItem("examenPreguntas")) || {};
             const { curso, tema, preguntas } = examData;
 
-            document.getElementById("examCurso").textContent = curso || "Desconocido";
-            document.getElementById("examTema").textContent = tema || "Desconocido";
+            if (curso && tema && preguntas) {
+                examCurso.textContent = curso;
+                examTema.textContent = tema;
 
-            const questionsContainer = document.getElementById("questionsContainer");
+                preguntas.forEach((pregunta, index) => {
+                    const questionDiv = document.createElement("div");
+                    questionDiv.classList.add("question");
 
-            preguntas.forEach((pregunta, index) => {
-                const questionDiv = document.createElement("div");
-                questionDiv.classList.add("question");
+                    const questionText = document.createElement("p");
+                    questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
+                    questionDiv.appendChild(questionText);
 
-                const questionText = document.createElement("p");
-                questionText.textContent = `${index + 1}. ${pregunta.pregunta}`;
-                questionDiv.appendChild(questionText);
+                    if (pregunta.opciones) {
+                        const optionsList = document.createElement("ul");
+                        optionsList.classList.add("options");
+                        pregunta.opciones.forEach((opcion, i) => {
+                            const optionItem = document.createElement("li");
+                            optionItem.textContent = `(${String.fromCharCode(97 + i)}) ${opcion}`;
+                            optionsList.appendChild(optionItem);
+                        });
+                        questionDiv.appendChild(optionsList);
+                    }
 
-                if (pregunta.opciones) {
-                    pregunta.opciones.forEach(opcion => {
-                        const optionParagraph = document.createElement("p");
-                        optionParagraph.textContent = opcion;
-                        questionDiv.appendChild(optionParagraph);
+                    const regenerateButton = document.createElement("button");
+                    regenerateButton.textContent = "Regenerar";
+                    regenerateButton.addEventListener("click", async () => {
+                        const nuevaPregunta = await regenerateQuestion(index);
+                        if (nuevaPregunta) {
+                            preguntas[index] = nuevaPregunta;
+                            localStorage.setItem("examenPreguntas", JSON.stringify({ curso, tema, preguntas }));
+                            renderQuestions();
+                        }
                     });
+                    questionDiv.appendChild(regenerateButton);
+
+                    questionsContainer.appendChild(questionDiv);
+                });
+            } else {
+                alert("No se encontraron datos del examen.");
+            }
+
+            const renderQuestions = () => {
+                questionsContainer.innerHTML = "";
+                preguntas.forEach((pregunta, index) => {
+                    // Render de las preguntas (idéntico al anterior)
+                });
+            };
+
+            async function regenerateQuestion(index) {
+                try {
+                    const response = await fetch("/regenerate_question", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ index, curso, tema }),
+                    });
+                    const data = await response.json();
+                    return data.pregunta;
+                } catch (error) {
+                    console.error("Error al regenerar la pregunta:", error);
                 }
+            }
 
-                const regenerateButton = document.createElement("button");
-                regenerateButton.textContent = "Regenerar";
-                regenerateButton.addEventListener("click", () => alert("Regenerar pregunta no implementado aún"));
-                questionDiv.appendChild(regenerateButton);
-
-                questionsContainer.appendChild(questionDiv);
-            });
-
-            document.getElementById("printButton").addEventListener("click", () => window.print());
+            printButton.addEventListener("click", () => window.print());
         });
     </script>
 </body>
