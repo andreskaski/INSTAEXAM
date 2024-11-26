@@ -6,11 +6,10 @@
     <title>Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(to bottom, #1E90FF, #87CEFA);
-            color: #fff;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,26 +24,18 @@
             max-width: 500px;
         }
         .card {
-            background: #fff;
-            color: #333;
+            background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .card h2 {
-            margin-bottom: 10px;
         }
         .card button {
             width: 100%;
             padding: 10px;
             background-color: #1E90FF;
-            color: #fff;
+            color: white;
             border: none;
             border-radius: 5px;
-            cursor: pointer;
-        }
-        .card button:hover {
-            background-color: #4682B4;
         }
     </style>
 </head>
@@ -52,7 +43,7 @@
     <div class="dashboard">
         <div class="card">
             <h2>Generar Examen</h2>
-            <button>Ir</button>
+            <button onclick="location.href='/generar_examen'">Ir</button>
         </div>
         <div class="card">
             <h2>Perfil</h2>
@@ -61,10 +52,6 @@
         <div class="card">
             <h2>Ayuda</h2>
             <button>Ir</button>
-        </div>
-        <div class="card">
-            <h2>Cerrar Sesión</h2>
-            <button>Salir</button>
         </div>
     </div>
 </body>
