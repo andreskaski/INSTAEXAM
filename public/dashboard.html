@@ -3,28 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Control</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #1E90FF, #87CEFA);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+        }
+        .card {
+            background: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .card h2 {
+            margin-bottom: 10px;
+        }
+        .card button {
+            width: 100%;
+            padding: 10px;
+            background-color: #1E90FF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .card button:hover {
+            background-color: #4682B4;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Bienvenido a tu Panel</h1>
-        <form action="/generar_examen" method="post" class="form-card">
-            <label for="grade">Curso Académico:</label>
-            <input type="text" id="grade" name="curso" required>
-
-            <label for="subject">Tema:</label>
-            <input type="text" id="subject" name="tema" required>
-
-            <label for="difficulty">Dificultad:</label>
-            <select id="difficulty" name="dificultad" required>
-                <option value="baja">Baja</option>
-                <option value="media">Media</option>
-                <option value="alta">Alta</option>
-            </select>
-
-            <button type="submit" class="button">Generar Examen</button>
-        </form>
+    <div class="dashboard">
+        <div class="card">
+            <h2>Generar Examen</h2>
+            <button>Ir</button>
+        </div>
+        <div class="card">
+            <h2>Perfil</h2>
+            <button>Ir</button>
+        </div>
+        <div class="card">
+            <h2>Ayuda</h2>
+            <button>Ir</button>
+        </div>
+        <div class="card">
+            <h2>Cerrar Sesión</h2>
+            <button>Salir</button>
+        </div>
     </div>
 </body>
 </html>
