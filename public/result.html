@@ -7,37 +7,26 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="exam-container">
-        <!-- Indicador de carga -->
-        <div id="loadingIndicator" class="loading">
-            <p>Generando examen, por favor espera...</p>
-        </div>
+    <!-- Indicador de carga -->
+    <div id="loadingIndicator" class="loading">
+        <p>Generando examen, por favor espera...</p>
+    </div>
 
-        <!-- Contenedor principal del examen -->
-        <div id="examContent" style="display: none;">
-            <!-- Encabezado -->
-            <header>
-                <h1>Examen Generado</h1>
-                <p><strong>Curso:</strong> <span id="examCurso"></span></p>
-                <p><strong>Tema:</strong> <span id="examTema"></span></p>
-            </header>
+    <!-- Contenido del examen -->
+    <div id="examContent" class="exam-container" style="display: none;">
+        <header>
+            <h1>Examen Generado</h1>
+            <h2 id="examCurso"></h2>
+            <h3 id="examTema"></h3>
+        </header>
 
-            <!-- Instrucciones -->
-            <section class="instructions">
-                <h2>Instrucciones</h2>
-                <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
-            </section>
+        <section class="questions" id="preguntas">
+            <!-- Preguntas inyectadas dinámicamente -->
+        </section>
 
-            <!-- Preguntas -->
-            <section class="questions" id="preguntas">
-                <!-- Las preguntas se generarán aquí dinámicamente -->
-            </section>
-
-            <!-- Botón de imprimir -->
-            <footer>
-                <button id="printButton">Imprimir Examen</button>
-            </footer>
-        </div>
+        <footer>
+            <button id="printButton">Imprimir Examen</button>
+        </footer>
     </div>
 
     <script>
@@ -48,20 +37,19 @@
             const examCurso = document.getElementById("examCurso");
             const examTema = document.getElementById("examTema");
 
-            // Simula el tiempo de carga y obtén datos
             const preguntas = JSON.parse(localStorage.getItem("examenPreguntas")) || [];
             const curso = localStorage.getItem("examenCurso") || "Sin especificar";
             const tema = localStorage.getItem("examenTema") || "Sin especificar";
 
-            examCurso.textContent = curso;
-            examTema.textContent = tema;
+            examCurso.textContent = `Curso: ${curso}`;
+            examTema.textContent = `Tema: ${tema}`;
 
             function renderQuestions() {
                 preguntasContainer.innerHTML = ""; // Limpia preguntas anteriores
 
                 preguntas.forEach((pregunta, index) => {
-                    const questionCard = document.createElement("div");
-                    questionCard.className = "question-card";
+                    const questionBlock = document.createElement("div");
+                    questionBlock.className = "question-block";
 
                     const questionTitle = document.createElement("h3");
                     questionTitle.textContent = `Pregunta ${index + 1}: ${pregunta.tipo}`;
@@ -79,9 +67,9 @@
                         }
                     });
 
-                    questionCard.appendChild(questionTitle);
-                    questionCard.appendChild(questionText);
-                    questionCard.appendChild(regenerateButton);
+                    questionBlock.appendChild(questionTitle);
+                    questionBlock.appendChild(questionText);
+                    questionBlock.appendChild(regenerateButton);
 
                     if (pregunta.opciones) {
                         const optionsList = document.createElement("ul");
@@ -90,10 +78,10 @@
                             optionItem.textContent = opcion;
                             optionsList.appendChild(optionItem);
                         });
-                        questionCard.appendChild(optionsList);
+                        questionBlock.appendChild(optionsList);
                     }
 
-                    preguntasContainer.appendChild(questionCard);
+                    preguntasContainer.appendChild(questionBlock);
                 });
             }
 
@@ -117,14 +105,12 @@
                 }
             }
 
-            // Simula un tiempo de carga de 2 segundos
             setTimeout(() => {
                 renderQuestions();
-                loadingIndicator.style.display = "none"; // Oculta el indicador de carga
-                examContent.style.display = "block"; // Muestra el contenido del examen
+                loadingIndicator.style.display = "none"; // Oculta el indicador
+                examContent.style.display = "block"; // Muestra el contenido
             }, 2000);
 
-            // Botón de imprimir
             const printButton = document.getElementById("printButton");
             printButton.addEventListener("click", () => window.print());
         });
