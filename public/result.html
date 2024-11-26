@@ -8,87 +8,30 @@
 </head>
 <body>
     <div class="exam-container">
+        <!-- Encabezado -->
         <header>
             <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
         </header>
 
+        <!-- Instrucciones -->
         <section class="instructions">
             <h2>Instrucciones</h2>
             <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
         </section>
 
-        <section class="questions" id="preguntas"></section>
+        <!-- Preguntas -->
+        <section class="questions" id="preguntas">
+            <!-- Aquí se inyectarán dinámicamente las preguntas -->
+        </section>
 
+        <!-- Botones -->
         <footer>
             <button id="printButton">Imprimir Examen</button>
         </footer>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const preguntasContainer = document.getElementById("preguntas");
-            const examCurso = document.getElementById("examCurso");
-            const examTema = document.getElementById("examTema");
-
-            const examData = JSON.parse(localStorage.getItem("examenData"));
-
-            if (examData) {
-                examCurso.textContent = examData.curso;
-                examTema.textContent = examData.tema;
-
-                examData.preguntas.forEach((pregunta, index) => {
-                    const questionCard = document.createElement("div");
-                    questionCard.classList.add("question-card");
-
-                    const questionTitle = document.createElement("h3");
-                    questionTitle.textContent = `Pregunta ${index + 1}:`;
-
-                    const questionText = document.createElement("p");
-                    questionText.textContent = pregunta.pregunta;
-
-                    const regenerateButton = document.createElement("button");
-                    regenerateButton.textContent = "Regenerar";
-                    regenerateButton.addEventListener("click", async () => {
-                        const newQuestion = await regenerateQuestion(index, examData.curso, examData.tema);
-                        if (newQuestion) {
-                            examData.preguntas[index] = newQuestion;
-                            localStorage.setItem("examenData", JSON.stringify(examData));
-                            location.reload();
-                        }
-                    });
-
-                    questionCard.appendChild(questionTitle);
-                    questionCard.appendChild(questionText);
-                    questionCard.appendChild(regenerateButton);
-
-                    if (pregunta.opciones) {
-                        const optionsList = document.createElement("ul");
-                        pregunta.opciones.forEach(opcion => {
-                            const optionItem = document.createElement("li");
-                            optionItem.textContent = opcion;
-                            optionsList.appendChild(optionItem);
-                        });
-                        questionCard.appendChild(optionsList);
-                    }
-
-                    preguntasContainer.appendChild(questionCard);
-                });
-            }
-
-            async function regenerateQuestion(index, curso, tema) {
-                const response = await fetch("/regenerate_question", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ index, curso, tema }),
-                });
-                const data = await response.json();
-                return data.pregunta;
-            }
-
-            document.getElementById("printButton").addEventListener("click", () => window.print());
-        });
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
