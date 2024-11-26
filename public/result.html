@@ -4,108 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Examen Generado</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            margin: 0;
-            padding: 0;
-        }
-        .exam-container {
-            width: 90%;
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #007BFF;
-        }
-        .instructions {
-            margin-bottom: 20px;
-            font-size: 1.1em;
-        }
-        .question {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-        }
-        .question h3 {
-            margin: 0 0 10px 0;
-        }
-        button {
-            padding: 8px 15px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .print-btn {
-            margin: 20px 0;
-            display: block;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="exam-container">
-        <h1>Examen Generado</h1>
-        <div class="instructions">
+        <header>
+            <h1>Examen Generado</h1>
             <p><strong>Curso:</strong> <span id="examCurso"></span></p>
             <p><strong>Tema:</strong> <span id="examTema"></span></p>
-            <p>Responde las preguntas a continuación.</p>
-        </div>
-        <div id="preguntas"></div>
-        <div class="print-btn">
+        </header>
+
+        <section class="instructions">
+            <h2>Instrucciones</h2>
+            <p>Lee cada pregunta cuidadosamente y responde en tu hoja de examen.</p>
+        </section>
+
+        <section class="questions" id="preguntas"></section>
+
+        <footer>
             <button id="printButton">Imprimir Examen</button>
-        </div>
+        </footer>
     </div>
+
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const curso = localStorage.getItem("examenCurso");
-            const tema = localStorage.getItem("examenTema");
-            const preguntas = JSON.parse(localStorage.getItem("examenPreguntas"));
-
-            document.getElementById("examCurso").textContent = curso;
-            document.getElementById("examTema").textContent = tema;
-
             const preguntasContainer = document.getElementById("preguntas");
-            preguntas.forEach((pregunta, index) => {
-                const questionDiv = document.createElement("div");
-                questionDiv.className = "question";
-                questionDiv.innerHTML = `
-                    <h3>Pregunta ${index + 1}:</h3>
-                    <p>${pregunta.pregunta}</p>
-                    ${pregunta.opciones ? `<ul>${pregunta.opciones.map(op => `<li>${op}</li>`).join('')}</ul>` : ''}
-                    <button onclick="regenerateQuestion(${index})">Regenerar Pregunta</button>
-                `;
-                preguntasContainer.appendChild(questionDiv);
-            });
+            const examCurso = document.getElementById("examCurso");
+            const examTema = document.getElementById("examTema");
 
-            document.getElementById("printButton").addEventListener("click", () => window.print());
+            const examData = JSON.parse(localStorage.getItem("examenData"));
 
-            window.regenerateQuestion = async (index) => {
-                const response = await fetch('/regenerate_question', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ index, curso, tema })
+            if (examData) {
+                examCurso.textContent = examData.curso;
+                examTema.textContent = examData.tema;
+
+                examData.preguntas.forEach((pregunta, index) => {
+                    const questionCard = document.createElement("div");
+                    questionCard.classList.add("question-card");
+
+                    const questionTitle = document.createElement("h3");
+                    questionTitle.textContent = `Pregunta ${index + 1}:`;
+
+                    const questionText = document.createElement("p");
+                    questionText.textContent = pregunta.pregunta;
+
+                    const regenerateButton = document.createElement("button");
+                    regenerateButton.textContent = "Regenerar";
+                    regenerateButton.addEventListener("click", async () => {
+                        const newQuestion = await regenerateQuestion(index, examData.curso, examData.tema);
+                        if (newQuestion) {
+                            examData.preguntas[index] = newQuestion;
+                            localStorage.setItem("examenData", JSON.stringify(examData));
+                            location.reload();
+                        }
+                    });
+
+                    questionCard.appendChild(questionTitle);
+                    questionCard.appendChild(questionText);
+                    questionCard.appendChild(regenerateButton);
+
+                    if (pregunta.opciones) {
+                        const optionsList = document.createElement("ul");
+                        pregunta.opciones.forEach(opcion => {
+                            const optionItem = document.createElement("li");
+                            optionItem.textContent = opcion;
+                            optionsList.appendChild(optionItem);
+                        });
+                        questionCard.appendChild(optionsList);
+                    }
+
+                    preguntasContainer.appendChild(questionCard);
+                });
+            }
+
+            async function regenerateQuestion(index, curso, tema) {
+                const response = await fetch("/regenerate_question", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ index, curso, tema }),
                 });
                 const data = await response.json();
-                if (data.pregunta) {
-                    preguntas[index] = data.pregunta;
-                    localStorage.setItem("examenPreguntas", JSON.stringify(preguntas));
-                    location.reload();
-                }
-            };
+                return data.pregunta;
+            }
+
+            document.getElementById("printButton").addEventListener("click", () => window.print());
         });
     </script>
 </body>
