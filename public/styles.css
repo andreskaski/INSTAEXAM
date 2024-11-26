@@ -34,8 +34,8 @@ body {
     border-bottom: none;
 }
 
-.question p {
-    margin: 5px 0;
+.options p {
+    margin-left: 20px;
 }
 
 .regenerate-btn {
